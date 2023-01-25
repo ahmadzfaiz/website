@@ -1,0 +1,30 @@
+{% load static %}
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>{% block title %}{% endblock title %} | Ahmad Zaenun Faiz</title>
+
+  <!-- Font Awesome icons (Font Awesome Free 6.1.0)-->
+  <script src="{% static 'font-library/fontawesome/all.js' %}" crossorigin="anonymous"></script>
+
+  <!-- Google fonts-->
+  <link href="{% static 'font-library/google-font/montserrat.css' %}" rel="stylesheet" type="text/css" />
+  <link href="{% static 'font-library/google-font/roboto.css' %}" rel="stylesheet" type="text/css" />
+
+  <!-- Core theme CSS (includes Bootstrap)-->
+  <link href="{% static 'assets/css/styles.css' %}" rel="stylesheet" />
+
+  {% block head %}{% endblock head %}
+</head>
+<body id="page-top">
+  {% block body %}{% endblock body %}
+
+  <!-- Bootstrap core JS-->
+  <script src="{% static 'bootstrap/bootstrap.bundle.min.js' %}"></script>
+  <!-- Core theme JS-->
+  <script src="{% static 'agency-page/js/scripts.js' %}"></script>
+</body>
+</html>

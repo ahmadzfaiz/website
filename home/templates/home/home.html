@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Welcome to my site{% endblock title %}
+{% block head %}
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+{% endblock head %}
+
+{% block body %}
+    {% include 'home/navbar.html' %}
+    {% include 'home/maskhead.html' %}
+    {% include 'home/specialization.html' %}
+    {% include 'home/portofolio.html' %}
+    {% include 'home/experience.html' %}
+    {% include 'home/certificate.html' %}
+    {% include 'home/client.html' %}
+    {% include 'home/contact.html' %}
+    {% include 'home/footer.html' %}
+{% endblock body %}

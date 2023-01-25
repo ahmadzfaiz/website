@@ -1,0 +1,28 @@
+{% load static %}
+
+{% block head %}
+  <style>
+    #masthead-background{
+      background-image: url('{% static "assets/images/pexels-carlos-oliva-3586966.jpg" %}');
+    }
+
+    #welcome-subtitle{
+      background-color: #ffffff;
+      opacity: 0.6;
+      color: navy;
+    }
+
+    .welcome-blank{
+      opacity: 0;
+    }
+  </style>
+{% endblock %}
+<!-- Masthead-->
+<header class="masthead" id="masthead-background">
+  <div class="container">
+    <div class="masthead-subheading">Welcome to Faiz's Website!</div>
+    <span class="masthead-heading text-uppercase mb-5" id="welcome-subtitle">It's Nice To Meet You</span><br>
+    <div class="m-5 welcome-blank">.</div>
+    <div class="m-5 welcome-blank">.</div>
+  </div>
+</header>

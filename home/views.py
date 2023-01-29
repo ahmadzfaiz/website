@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from home.models import Experience, Skill, Contact
 from home.forms import contactForm
 from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.conf import settings
 
@@ -18,16 +19,15 @@ def home(request):
       item.user = request.user
       item.save()
 
-      from_email = settings.DEFAULT_FROM_EMAIL  
-
       html = render_to_string('home/email.html', {
         'name': item.name,
         'email': item.email,
         'phone': item.phone_number,
         'message': item.message
-      })  # html_message= html, 
+      }) 
 
-      send_mail(item.name, item.message, from_email, [item.email], html_message= html, fail_silently=False)
+      sent_to = ['zaenun.faiz@gmail.com', item.email]
+      send_mail(item.name, item.message, 'ahmadzfaiz.gcp@gmail.com', sent_to, html_message= html, fail_silently=False)
       return redirect('home')
   
   else:

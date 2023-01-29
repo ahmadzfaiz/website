@@ -123,10 +123,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
-if not DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-
 STATICFILES_DIRS = (
         os.path.join(BASE_DIR, 'static/'),
 )
@@ -146,4 +142,3 @@ EMAIL_PORT = email_port
 EMAIL_USE_TLS = email_use_tls
 EMAIL_HOST_USER = email_user
 EMAIL_HOST_PASSWORD = email_password
-DEFAULT_FROM_EMAIL = email_default

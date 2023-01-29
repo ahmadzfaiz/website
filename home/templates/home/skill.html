@@ -1,0 +1,16 @@
+{% load static %}
+
+<div class="py-5">
+  <div class="container">
+    <div class="text-center">
+      <h4 class="section-heading text-uppercase mb-4">My Skills</h4>
+    </div>
+    <div class="row align-items-center">
+      {% for item in skill %}
+      <div class="col-md-3 col-sm-6 my-3 mb-4">
+        <a href="{{item.reference}}" target="_blank"><img class="img-fluid img-brand d-block mx-auto" src="{{item.image.url}}" alt="{{item.label}}" aria-label="{{item.name}}" /></a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

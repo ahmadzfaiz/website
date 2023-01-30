@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
+
+    # IMPORTED APPS
+    'django_better_admin_arrayfield',
 
     # CREATED APPS
     'home',

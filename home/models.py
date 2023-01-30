@@ -1,7 +1,19 @@
 from django.db import models
+from django_better_admin_arrayfield.models import fields
 from django.core.validators import RegexValidator
 
 # Create your models here.
+class Portfolio(models.Model):
+  project_name = models.CharField(max_length=100)
+  client_name = models.CharField(max_length=100)
+  project_period = models.CharField(max_length=50)
+  project_link = models.URLField()
+  description = models.TextField()
+  image = models.ImageField(upload_to='portfolio/', help_text='Rasio 1200px × 800px"')
+  label = models.CharField(max_length=30)
+  category = models.CharField(max_length=30)
+  frameworks = fields.ArrayField(models.CharField(max_length=20), null=True, blank=True)
+
 class Experience(models.Model):
   workplace = models.CharField(max_length=50)
   position = models.CharField(max_length=30)

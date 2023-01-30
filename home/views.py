@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from home.models import Experience, Certificate, Skill, Contact
+from home.models import Portfolio, Experience, Certificate, Skill, Contact
 from home.forms import contactForm
 from django.core.mail import send_mail
 from django.core.mail import EmailMessage
@@ -8,6 +8,7 @@ from django.conf import settings
 
 # Create your views here.
 def home(request):
+  port = Portfolio.objects.all
   exp = Experience.objects.all
   cert = Certificate.objects.all
   skill = Skill.objects.all
@@ -35,6 +36,7 @@ def home(request):
     contact = contactForm()
 
   return render(request, 'home/home.html', {
+    'portfolio': port,
     'skill': skill,
     'certificate': cert,
     'experience': exp,

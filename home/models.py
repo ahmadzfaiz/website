@@ -44,3 +44,38 @@ class Contact(models.Model):
   phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+6281255555555'. Up to 15 digits allowed.")
   phone_number = models.CharField(max_length=17, validators=[phone_regex])
   message = models.TextField()
+
+class ActivityLog(models.Model):
+  url_access = models.URLField(editable=False)
+  ip = models.GenericIPAddressField(null=True, editable=False)
+  timestamp = models.DateTimeField(auto_now_add=True, editable=False)
+  electronic = models.CharField(max_length=50, editable=False)
+  is_touchscreen = models.BooleanField(editable=False)
+  is_bot = models.BooleanField(editable=False)
+  os_type = models.CharField(max_length=50, editable=False)
+  os_version = models.CharField(max_length=50, editable=False)
+  browser_type = models.CharField(max_length=50, editable=False)
+  browser_version = models.CharField(max_length=50, editable=False)
+  device_type = models.CharField(max_length=50, editable=False)
+  device_brand = models.CharField(max_length=50, editable=False)
+  device_model = models.CharField(max_length=50, editable=False)
+  username = models.CharField(max_length=50, editable=False)
+
+class WebEntry(models.Model):
+  class Meta:
+    verbose_name_plural = 'Web entries'
+
+  action = models.CharField(max_length=50, editable=False)
+  ip = models.GenericIPAddressField(null=True, editable=False)
+  timestamp = models.DateTimeField(auto_now_add=True, editable=False)
+  electronic = models.CharField(max_length=50, editable=False)
+  is_touchscreen = models.BooleanField(editable=False)
+  is_bot = models.BooleanField(editable=False)
+  os_type = models.CharField(max_length=50, editable=False)
+  os_version = models.CharField(max_length=50, editable=False)
+  browser_type = models.CharField(max_length=50, editable=False)
+  browser_version = models.CharField(max_length=50, editable=False)
+  device_type = models.CharField(max_length=50, editable=False)
+  device_brand = models.CharField(max_length=50, editable=False)
+  device_model = models.CharField(max_length=50, editable=False)
+  username = models.CharField(max_length=50, editable=False)

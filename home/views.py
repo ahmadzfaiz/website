@@ -2,12 +2,15 @@ from django.shortcuts import render, redirect
 from home.models import Portfolio, Experience, Certificate, Skill, Contact
 from home.forms import contactForm
 from django.core.mail import send_mail
-from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.conf import settings
+from .signals import log_activity
 
 # Create your views here.
 def home(request):
+  if request.method == 'GET':
+    log_activity(request)
+
   port = Portfolio.objects.all
   exp = Experience.objects.all
   cert = Certificate.objects.all

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     # IMPORTED APPS
     'django_better_admin_arrayfield',
+    'django_user_agents',
 
     # CREATED APPS
     'home',
@@ -56,7 +57,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware',
 ]
+
+MIDDLEWARE_CLASSES = (
+)
 
 ROOT_URLCONF = 'project.urls'
 

@@ -1,6 +1,8 @@
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.dispatch import receiver
 from .models import ActivityLog, WebEntry
+import requests
+import json
 
 @receiver(user_logged_in)
 def log_user_login(sender, request, user, **kwargs):
@@ -141,6 +143,11 @@ def log_user_logout(sender, request, user, **kwargs):
 
 # LOGGING AKTIVITAS
 def log_activity(request):
+  # FETCH DATA GEOIP
+  ip = request.META.get('REMOTE_ADDR')
+  res = requests.get(f'http://ip-api.com/json/{ip}').text
+  geoip = json.loads(res)
+
   # LOGIKA UNTUK JENIS ELEKTRONIK
   if request.user_agent.is_mobile:
     electronic = 'Smartphone'
@@ -177,7 +184,7 @@ def log_activity(request):
 
   activity = ActivityLog.objects.create(
     url_access=request.build_absolute_uri(), 
-    ip=request.META.get('REMOTE_ADDR'),
+    ip=ip,
     electronic=electronic,
     is_touchscreen=request.user_agent.is_touch_capable,
     is_bot=request.user_agent.is_bot,
@@ -188,6 +195,16 @@ def log_activity(request):
     device_type=device_type,
     device_brand=device_brand,
     device_model=device_model,
-    username=username)
+    username=username,
+    country_code=geoip['countryCode'],
+    country=geoip['country'],
+    region_code=geoip['region'],
+    region=geoip['regionName'],
+    city=geoip['city'],
+    lat=geoip['lat'],
+    lon=geoip['lon'],
+    timezone=geoip['timezone'],
+    isp=geoip['isp'],
+    isp_detail=geoip['as'])
 
   return activity

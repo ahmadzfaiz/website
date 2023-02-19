@@ -44,5 +44,5 @@ def home(request):
     'certificate': cert,
     'experience': exp,
     'contact': contact,
-    'contact': contact 
+    'contact': contact,
   })

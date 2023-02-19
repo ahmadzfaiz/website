@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    'django.contrib.gis',
 
     # IMPORTED APPS
     'django_better_admin_arrayfield',
@@ -59,9 +60,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_user_agents.middleware.UserAgentMiddleware',
 ]
-
-MIDDLEWARE_CLASSES = (
-)
 
 ROOT_URLCONF = 'project.urls'
 
@@ -151,3 +149,10 @@ EMAIL_PORT = email_port
 EMAIL_USE_TLS = email_use_tls
 EMAIL_HOST_USER = email_user
 EMAIL_HOST_PASSWORD = email_password
+
+# GDAL for Testing in Windows
+if os.name == 'nt':
+    OSGEO4W = r"C:\OSGeo4W"
+    assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
+    GDAL_LIBRARY_PATH = r'C:\OSGeo4W\bin\gdal306.dll'
+    os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']

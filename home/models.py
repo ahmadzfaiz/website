@@ -61,6 +61,18 @@ class ActivityLog(models.Model):
   device_model = models.CharField(max_length=50, editable=False)
   username = models.CharField(max_length=50, editable=False)
 
+  # GEOIP
+  country_code = models.CharField(max_length=5, editable=False)
+  country = models.CharField(max_length=80, editable=False)
+  region_code = models.CharField(max_length=5, editable=False)
+  region = models.CharField(max_length=80, editable=False)
+  city = models.CharField(max_length=80, editable=False)
+  lat = models.DecimalField(max_digits= 8, decimal_places=4, editable=False)
+  lon = models.DecimalField(max_digits= 8, decimal_places=4, editable=False)
+  timezone = models.CharField(max_length=20, editable=False)
+  isp = models.CharField(max_length=80, editable=False)
+  isp_detail = models.CharField(max_length=100, editable=False)
+
 class WebEntry(models.Model):
   class Meta:
     verbose_name_plural = 'Web entries'

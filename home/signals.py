@@ -98,6 +98,11 @@ def log_user_login_failed(sender, credentials, request, **kwargs):
 
 @receiver(user_logged_out)
 def log_user_logout(sender, request, user, **kwargs):
+  # FETCH DATA GEOIP
+  ip = request.META.get('REMOTE_ADDR')
+  res = requests.get(f'http://ip-api.com/json/{ip}').text
+  geoip = json.loads(res)
+  
   # LOGIKA UNTUK JENIS ELEKTRONIK
   if request.user_agent.is_mobile:
     electronic = 'Smartphone'
@@ -139,7 +144,17 @@ def log_user_logout(sender, request, user, **kwargs):
     device_type=device_type,
     device_brand=device_brand,
     device_model=device_model,
-    username=user.username)
+    username=user.username,
+    country_code=geoip['countryCode'],
+    country=geoip['country'],
+    region_code=geoip['region'],
+    region=geoip['regionName'],
+    city=geoip['city'],
+    lat=geoip['lat'],
+    lon=geoip['lon'],
+    timezone=geoip['timezone'],
+    isp=geoip['isp'],
+    isp_detail=geoip['as'])
 
 # LOGGING AKTIVITAS
 def log_activity(request):

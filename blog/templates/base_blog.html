@@ -1,0 +1,39 @@
+{% load static %}
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>{% block title %}{% endblock title %} | Blog - Ahmad Zaenun Faiz</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'assets/images/hippo-solid.svg' %}">
+
+  <!-- Font Awesome icons (Font Awesome Free 6.1.0)-->
+  <script src="{% static 'font-library/fontawesome/all.js' %}" crossorigin="anonymous"></script>
+
+  <!-- Google fonts-->
+  <link href="{% static 'font-library/google-font/montserrat.css' %}" rel="stylesheet" type="text/css" />
+  <link href="{% static 'font-library/google-font/roboto.css' %}" rel="stylesheet" type="text/css" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="{% static 'bootstrap/bootstrap.bundle.min.js' %}"></script>
+
+  <style>
+    body{
+      font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+  </style>
+
+  {% block head %}{% endblock head %}
+</head>
+<body id="page-top">
+  <!-- JQuery -->
+  <script src="{% static 'jquery/jquery.min.js' %}"></script>
+
+  {% include 'blog/navbar.html' %}
+
+  {% block body %}{% endblock body %}
+
+</body>
+</html>

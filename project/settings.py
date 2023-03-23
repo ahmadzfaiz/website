@@ -33,6 +33,10 @@ ALLOWED_HOSTS = django_host
 # Application definition
 
 INSTALLED_APPS = [
+    # IMPORTED APPS
+    'admin_interface',
+    'colorfield',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,9 +49,11 @@ INSTALLED_APPS = [
     # IMPORTED APPS
     'django_better_admin_arrayfield',
     'django_user_agents',
+    'ckeditor',
 
     # CREATED APPS
     'home',
+    'blog',
 ]
 
 MIDDLEWARE = [

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from home.models import Portfolio, Experience, Certificate, Skill, Contact
 from home.forms import contactForm
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.template.loader import render_to_string
 from django.conf import settings
 from .signals import log_activity
@@ -31,7 +31,7 @@ def home(request):
         'message': item.message
       }) 
 
-      sent_to = ['zaenun.faiz@gmail.com', item.email]
+      sent_to = [item.email, 'ahmadzfaiz.gcp@gmail.com']
       send_mail(item.name, item.message, 'ahmadzfaiz.gcp@gmail.com', sent_to, html_message= html, fail_silently=False)
       return redirect('home')
   

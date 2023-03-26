@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django_better_admin_arrayfield',
     'django_user_agents',
     'ckeditor',
+    'captcha',
 
     # CREATED APPS
     'home',
@@ -163,3 +164,6 @@ if os.name == 'nt':
     assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
     GDAL_LIBRARY_PATH = r'C:\OSGeo4W\bin\gdal306.dll'
     os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
+
+RECAPTCHA_PUBLIC_KEY = recaptcha_public
+RECAPTCHA_PRIVATE_KEY = recaptcha_private

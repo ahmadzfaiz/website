@@ -27,7 +27,7 @@ class ContactModel(admin.ModelAdmin):
 @admin.register(ActivityLog)
 class ActivityLogModel(admin.ModelAdmin):
   search_fields = ('username',)
-  list_display = ('id', 'url_access', 'ip', 'electronic', 'browser_type', 'timestamp', 'username')
+  list_display = ('id', 'url_access', 'ip', 'country', 'electronic', 'browser_type', 'timestamp', 'username')
   list_filter = (
     'ip', 'url_access', 'timestamp', 'electronic', 
     'os_type', 'os_version', 'browser_type', 'browser_version', 
@@ -36,7 +36,7 @@ class ActivityLogModel(admin.ModelAdmin):
 @admin.register(WebEntry)
 class WebEntryModel(admin.ModelAdmin):
   search_fields = ('username',)
-  list_display = ('id', 'ip', 'electronic', 'browser_type', 'action', 'timestamp', 'username')
+  list_display = ('id', 'ip', 'country', 'electronic', 'browser_type', 'action', 'timestamp', 'username')
   list_filter = (
     'ip', 'action', 'timestamp', 'electronic', 
     'os_type', 'os_version', 'browser_type', 'browser_version', 

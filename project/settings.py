@@ -26,12 +26,23 @@ SECRET_KEY = django_secret
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = django_debug
-
 ALLOWED_HOSTS = django_host
 
+# HTTPS settings
+SESSION_COOKIE_SECURE = session_cookie
+CSRF_COOKIE_SECURE = csrf_cookie
+SECURE_SSL_REDIRECT = ssl_redirect
+
+# HSTS settings
+SECURE_HSTS_SECONDS = hsts_second
+SECURE_HSTS_PRELOAD = hsts_preload
+SECURE_HSTS_INCLUDE_SUBDOMAINS = hsts_subdomain
+
+# RECAPTCHA settings
+RECAPTCHA_PUBLIC_KEY = recaptcha_public
+RECAPTCHA_PRIVATE_KEY = recaptcha_private
 
 # Application definition
-
 INSTALLED_APPS = [
     # IMPORTED APPS
     'admin_interface',
@@ -164,6 +175,3 @@ if os.name == 'nt':
     assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
     GDAL_LIBRARY_PATH = r'C:\OSGeo4W\bin\gdal306.dll'
     os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
-
-RECAPTCHA_PUBLIC_KEY = recaptcha_public
-RECAPTCHA_PRIVATE_KEY = recaptcha_private

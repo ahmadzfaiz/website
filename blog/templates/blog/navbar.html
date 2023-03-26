@@ -19,10 +19,25 @@
         <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
       </form>
 
-      <div class="text-end">
-        <button type="button" class="btn btn-outline-light me-2">Login</button>
-        <button type="button" class="btn btn-warning">Sign-up</button>
+      {% if request.user.is_authenticated %}
+      <div class="btn-group">
+        <div class="btn dropdown-toggle p-0" data-bs-toggle="dropdown" aria-expanded="false">
+          <img height="50px" src="{% static 'blog/img/avatar/capybara.png' %}" alt="profile_avatar">
+        </div>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><button class="dropdown-item" type="button">Profile</button></li>
+          <li><a href="{% url 'password_change' %}" class="text-decoration-none"><button class="dropdown-item" type="button">Change Password</button></a></li>
+          <hr>
+          <li><a href="{% url 'logout' %}" class="text-decoration-none"><button class="dropdown-item" type="button">Logout</button></a></li>
+        </ul>
       </div>
+      <div>Welcome,<br> <b>{{request.user}}</b></div>
+      {% else %}
+      <div class="text-end">
+        <a href="{% url 'login' %}?next=/blog"><button type="button" class="btn btn-outline-light me-2">Login</button></a>
+        <a href="{% url 'register' %}"><button type="button" class="btn btn-warning">Sign-up</button></a>
+      </div>
+      {% endif %}
     </div>
   </div>
 </header>

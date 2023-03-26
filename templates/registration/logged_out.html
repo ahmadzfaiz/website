@@ -1,0 +1,17 @@
+{% extends 'base_blog.html' %}
+{% load static %}
+
+{% block title %}Logout{% endblock title %}
+
+{% block head %}{% endblock head %}
+
+{% block body %}
+<div class="mt-5">Header</div>
+<div class="container page mt-4">
+  <h1>You are logged out</h1>
+  <p>Go to <a href="{% url 'blog' %}">main page</a> or login again <a href="{% url 'login' %}">here.</a></p>
+  <div class="text-center mt-4">
+    <img class="img-fluid" src="{% static 'blog/img/masbro4.jpg' %}" alt="welcome" style="height: 70%;">
+  </div>
+</div>
+{% endblock body %}

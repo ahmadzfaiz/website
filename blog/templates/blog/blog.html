@@ -2,13 +2,57 @@
 {% load static %}
 
 {% block title %}Home{% endblock title %}
-{% block head %}{% endblock head %}
+{% block head %}
+  <style>
+    .char-limit {
+      height: 30ch;
+      overflow: hidden;
+      white-space: wrap;
+      text-overflow: ellipsis;
+    }
+  </style>
+{% endblock head %}
 {% block body %}
-  <div class="mt-5">Navbar</div>
+  <div class="mt-4">Navbar</div>
   <div class="container">
-    <div class="mt-5"></div>
-    <div class="text-center">
+    {% for item in post %}
+      {% if forloop.counter0|divisibleby:2 %}
+      <div class="my-5">
+        <h1>{{item.title}}</h1>
+        {% for tag in item.tags %}
+        <span class="badge bg-info text-dark">{{tag}}</span>
+        {% endfor %} <br>
+        <i>Created at {{item.created_at}} by <b><u>{{item.author}}</u></b></i><br>
+        {% if item.created_at != item.updated_at %}
+        <i>Modified at {{item.updated_at}}</i>
+        {% endif %}
+        <div class="row char-limit mt-3">
+          <div class="col"></div>
+          <div class="col">{{item.body|safe}}</div>
+        </div>
+        <div class="mt-4"><a class="float-end" href="">Continue reading...</a></div>
+      </div>
+      {% else %}
+      <div class="my-5">
+        <h1>{{item.title}}</h1>
+        {% for tag in item.tags %}
+        <span class="badge bg-info text-dark">{{tag}}</span>
+        {% endfor %} <br>
+        <i>Created at {{item.created_at}} by <b><u>{{item.author}}</u></b></i><br>
+        {% if item.created_at != item.updated_at %}
+        <i>Modified at {{item.updated_at}}</i>
+        {% endif %}
+        <div class="row char-limit mt-3">
+          <div class="col">{{item.body|safe}}</div>
+          <div class="col"></div>
+        </div>
+        <div class="mt-4"><a href="">Continue reading...</a></div>
+      </div>
+      {% endif %}
+    {% endfor %}
+
+    <!-- <div class="text-center">
       <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:6971488439850475520" height="933" width="504" frameborder="0" allowfullscreen="" title="Posting tersemat"></iframe>
-    </div>
+    </div> -->
   </div>
 {% endblock body %}

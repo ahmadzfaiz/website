@@ -62,6 +62,8 @@ INSTALLED_APPS = [
     'django_user_agents',
     'ckeditor',
     'captcha',
+    'crispy_forms',
+    'crispy_bootstrap5',
 
     # CREATED APPS
     'home',
@@ -168,6 +170,10 @@ EMAIL_PORT = email_port
 EMAIL_USE_TLS = email_use_tls
 EMAIL_HOST_USER = email_user
 EMAIL_HOST_PASSWORD = email_password
+
+# Crispy Forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # GDAL for Testing in Windows
 if os.name == 'nt':

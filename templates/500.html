@@ -1,0 +1,18 @@
+{% extends 'base_blog.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Not Found{% endblock title %}
+
+{% block head %}{% endblock head %}
+
+{% block body %}
+<div class="mt-5">Header</div>
+<div class="container page mt-4">
+  <h1>Error 500: Server Error</h1>
+  <p>There's been an error. Please report to the site administrators about this error. Thanks for your patience.</p>
+  <div class="text-center mt-4">
+    <img class="img-fluid" src="{% static 'blog/img/masbro3.jpg' %}" alt="welcome" style="height: 70%;">
+  </div>
+</div>
+{% endblock body %}

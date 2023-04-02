@@ -1,10 +1,21 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from home.signals import log_activity
 from blog.forms import UserRegistration
 from blog.models import post
 
 # Create your views here.
-def blog(request):
+def home(request):
+  if request.method == 'GET':
+    log_activity(request)
+
+  article = post.objects.all().order_by('-updated_at')[:5]
+  
+  context = {
+    'article': article
+  }
+  return render(request, 'blog/home.html', context)
+
+def article(request):
   if request.method == 'GET':
     log_activity(request)
 
@@ -13,8 +24,18 @@ def blog(request):
   context = {
     'post': posts
   }
+  return render(request, 'blog/article.html', context)
 
-  return render(request, 'blog/blog.html', context)
+def article_post(request, pk):
+  if request.method == 'GET':
+    log_activity(request)
+
+  article = get_object_or_404(post, id=pk)
+  
+  context = {
+    'article': article
+  }
+  return render(request, 'blog/article_post.html', context)
 
 def register(request):
   if request.method == 'POST':

@@ -1,7 +1,7 @@
 {% extends 'base_blog.html' %}
 {% load static %}
 
-{% block title %}Home{% endblock title %}
+{% block title %}Article{% endblock title %}
 {% block head %}
   <style>
     .char-limit {
@@ -10,10 +10,19 @@
       white-space: wrap;
       text-overflow: ellipsis;
     }
+
+    @media only screen and (max-width: 992px) {
+      .image-post {
+        display: none;
+      }
+    }
   </style>
 {% endblock head %}
 {% block body %}
-  <div class="mt-4">Navbar</div>
+  <div>
+    {% include 'blog/navbar_empty.html' %}
+  </div>
+
   <div class="container">
     {% for item in post %}
       {% if forloop.counter0|divisibleby:2 %}
@@ -22,15 +31,15 @@
         {% for tag in item.tags %}
         <span class="badge bg-info text-dark">{{tag}}</span>
         {% endfor %} <br>
-        <i>Created at {{item.created_at}} by <b><u>{{item.author}}</u></b></i><br>
+        <i>Created at {{item.created_at}} by <b><u>{{item.author.get_full_name}}</u></b></i><br>
         {% if item.created_at != item.updated_at %}
         <i>Modified at {{item.updated_at}}</i>
         {% endif %}
         <div class="row char-limit mt-3">
-          <div class="col"></div>
-          <div class="col">{{item.body|safe}}</div>
+          <div class="col-lg image-post"><img src="{{item.image.url}}" alt="{{item.title}}" width="100%"></div>
+          <div class="col-lg">{{item.body|safe}}</div>
         </div>
-        <div class="mt-4"><a class="float-end" href="">Continue reading...</a></div>
+        <div class="mt-4"><a class="float-end" href="{% url 'article_post' item.id %}">Continue reading...</a></div>
       </div>
       {% else %}
       <div class="my-5">
@@ -38,15 +47,15 @@
         {% for tag in item.tags %}
         <span class="badge bg-info text-dark">{{tag}}</span>
         {% endfor %} <br>
-        <i>Created at {{item.created_at}} by <b><u>{{item.author}}</u></b></i><br>
+        <i>Created at {{item.created_at}} by <b><u>{{item.author.get_full_name}}</u></b></i><br>
         {% if item.created_at != item.updated_at %}
         <i>Modified at {{item.updated_at}}</i>
         {% endif %}
         <div class="row char-limit mt-3">
-          <div class="col">{{item.body|safe}}</div>
-          <div class="col"></div>
+          <div class="col-lg">{{item.body|safe}}</div>
+          <div class="col-lg image-post"><img src="{{item.image.url}}" alt="{{item.title}}" width="100%"></div>
         </div>
-        <div class="mt-4"><a href="">Continue reading...</a></div>
+        <div class="mt-4"><a href="{% url 'article_post' item.id %}">Continue reading...</a></div>
       </div>
       {% endif %}
     {% endfor %}

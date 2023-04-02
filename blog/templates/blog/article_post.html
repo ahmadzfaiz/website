@@ -1,0 +1,24 @@
+{% extends 'base_blog.html' %}
+{% load static %}
+
+{% block title %}{{article}}{% endblock title %}
+{% block head %}
+  <style>
+    .char-limit {
+      height: 30ch;
+      overflow: hidden;
+      white-space: wrap;
+      text-overflow: ellipsis;
+    }
+  </style>
+{% endblock head %}
+{% block body %}
+  <div>
+    {% include 'blog/navbar_empty.html' %}
+  </div>
+
+  <div class="container">
+    <h1 class="mt-5">{{article}}</h1>
+    <div>{{article.body|safe}}</div>
+  </div>
+{% endblock body %}

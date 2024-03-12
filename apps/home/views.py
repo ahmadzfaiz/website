@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from home.models import Portfolio, Experience, Certificate, Skill, Contact
-from home.forms import contactForm
+from apps.home.models import Portfolio, Experience, Certificate, Skill, Contact
+from apps.home.forms import contactForm
 from django.core.mail import send_mail, EmailMessage
 from django.template.loader import render_to_string
 from django.conf import settings

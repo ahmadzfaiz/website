@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-from home.signals import log_activity
-from blog.forms import UserRegistration
-from blog.models import post
+from apps.home.signals import log_activity
+from apps.blog.forms import UserRegistration
+from apps.blog.models import post
 
 # Create your views here.
 def home(request):

@@ -66,8 +66,9 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
 
     # CREATED APPS
-    'home',
-    'blog',
+    'apps.home',
+    'apps.blog',
+    'apps.iklim',
 ]
 
 MIDDLEWARE = [
@@ -181,3 +182,6 @@ if os.name == 'nt':
     assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
     GDAL_LIBRARY_PATH = r'C:\OSGeo4W\bin\gdal307.dll'
     os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
+elif os.name == 'posix':
+    GDAL_LIBRARY_PATH = '/opt/homebrew/opt/gdal/lib/libgdal.dylib'
+    GEOS_LIBRARY_PATH = '/opt/homebrew/opt/geos/lib/libgeos_c.dylib'

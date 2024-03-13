@@ -23,7 +23,7 @@
     <div class="d-flex justify-content-center flex-wrap my-4">
       {% for item in climate %}
       <div class="card mx-2 my-2" style="width: 18rem;">
-        <img src="https://cdn.bmkg.go.id/Web/Logo-BMKG-new.png" class="card-img-top" alt="...">
+        <img src="static/assets/images/weather/{{item.icon}}.svg" class="card-img-top" alt="{{item.weather}}">
         <div class="card-body">
           <h5 class="card-title">{{item.name}}</h5>
           <p class="card-text">{{item.lon}} {{item.lat}}</p>

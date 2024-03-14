@@ -169,9 +169,9 @@ def log_user_logout(sender, request, user, **kwargs):
 
 # LOGGING AKTIVITAS
 def log_activity(request):
-  if not DEBUG:
+  ip = request.META.get('REMOTE_ADDR')
+  if not DEBUG and ip != '127.0.0.1':
     # FETCH DATA GEOIP
-    ip = request.META.get('REMOTE_ADDR')
     response_asn = reader_asn.asn(ip)
     response_city = reader_city.city(ip)
 

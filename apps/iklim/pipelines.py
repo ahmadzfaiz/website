@@ -85,33 +85,33 @@ def get_wilayah(url):
     data['name'] = area['name'][1]['#text']
     data['icon'] = area['parameter'][6]['timerange'][icon_index]['value']['#text']
 
-    if data['icon'] == 0: 
+    if data['icon'] == '0': 
       data['weather'] = 'Cerah / Clear Skies'
-    elif data['icon'] == 1:
+    elif data['icon'] == '1':
       data['weather'] = 'Cerah / Clear Skies'
-    elif data['icon'] == 2:
+    elif data['icon'] == '2':
       data['weather'] = 'Cerah Berawan / Partly Cloudy'
-    elif data['icon'] == 3:
+    elif data['icon'] == '3':
       data['weather'] = 'Berawan / Mostly Cloudy'
-    elif data['icon'] == 4:
+    elif data['icon'] == '4':
       data['weather'] = 'Berawan Tebal / Overcast'
-    elif data['icon'] == 5:
+    elif data['icon'] == '5':
       data['weather'] = 'Udara Kabur / Haze'
-    elif data['icon'] == 10:
+    elif data['icon'] == '10':
       data['weather'] = 'Asap / Smoke'
-    elif data['icon'] == 45:
+    elif data['icon'] == '45':
       data['weather'] = 'Kabut / Fog'
-    elif data['icon'] == 60:
+    elif data['icon'] == '60':
       data['weather'] = 'Hujan Ringan / Light Rain'
-    elif data['icon'] == 61:
+    elif data['icon'] == '61':
       data['weather'] = 'Hujan Sedang / Rain'
-    elif data['icon'] == 63:
+    elif data['icon'] == '63':
       data['weather'] = 'Hujan Lebat / Heavy Rain'
-    elif data['icon'] == 80:
+    elif data['icon'] == '80':
       data['weather'] = 'Hujan Lokal / Isolated Shower'
-    elif data['icon'] == 95:
+    elif data['icon'] == '95':
       data['weather'] = 'Hujan Petir / Severe Thunderstorm'
-    elif data['icon'] == 97:
+    elif data['icon'] == '97':
       data['weather'] = 'Hujan Petir / Severe Thunderstorm'
     else:
       data['weather'] = 'Tidak ada data'

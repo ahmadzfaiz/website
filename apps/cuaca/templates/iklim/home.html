@@ -1,0 +1,79 @@
+{% extends 'iklim/base.html' %}
+{% load static %}
+
+{% block title %}Home | Iklim{% endblock title %}
+
+{% block head %}
+<style>
+  /* Style for the popup */
+  .cuaca {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Popup content (hidden by default) */
+  .cuaca .cuaca-info {
+    display: none;
+    position: absolute;
+    background-color: skyblue;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    z-index: 1;
+  }
+
+  /* Show the popup when hovering over the container */
+  .cuaca:hover .cuaca-info {
+    display: block;
+  }
+</style>
+{% endblock head %}
+
+{% block body %}
+<div class="container">
+  <div class="text-center mt-5">
+    <h1 class="mt-2">Data Prakiraan Cuaca - BMKG</h1>
+    <img src="https://cdn.bmkg.go.id/Web/Logo-BMKG-new.png" alt="Logo BMKG" width="200">
+    <p class="mt-2">Halaman ini menunjukkan data prakiraan cuaca yang dipublikasikan oleh BMKG.</p>
+  </div>
+  
+  <div class="mt-2">
+    <p>
+      Sumber Data: {{data.source|title}} & BMKG. <br> 
+      Akuisisi data: {{data.timestamp}} <br>
+      Waktu saat ini: {% now "Y-m-d H:i:s" %} WIB
+    </p>
+  
+    <div class="d-flex justify-content-center flex-wrap my-4">
+      {% for item in data.climate %}
+      <div class="card mx-2 my-2" style="width: 18rem;">
+        <div class="cuaca">
+          <div class="m-4">
+            <img src="/static/assets/images/weather/{{item.icon}}.svg" class="card-img-top" alt="{{item.weather}}">
+            <div class="cuaca-info">{{item.weather}}</div>
+          </div>
+        </div>
+        <div class="card-body mt-1">
+          <h5 class="card-title">{{item.name}}</h5>
+          <p class="card-text">{{item.lon}} {{item.lat}}</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+      <p>{{item.test}}</p>
+      {% endfor %}
+    </div>
+  
+    <div class="row mb-5">
+      <div class="col ms-3">
+        {% if page.index != page.first %}
+        <a href="{% url 'cuaca_main' page.previous %}" class="btn btn-outline-secondary">Previous</a>
+        {% endif %}
+      </div>
+      <div class="col me-3 d-flex justify-content-end">
+        {% if page.index != page.last %}
+        <a href="{% url 'cuaca_main' page.next %}" class="btn btn-outline-secondary">Next</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body %}

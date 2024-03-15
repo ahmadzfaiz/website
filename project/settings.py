@@ -68,7 +68,7 @@ INSTALLED_APPS = [
     # CREATED APPS
     'apps.home',
     'apps.blog',
-    'apps.iklim',
+    'apps.cuaca',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,169 @@
+{% extends 'cuaca/base.html' %}
+{% load static %}
+
+{% block title %}Detail | Cuaca{% endblock title %}
+
+{% block head %}
+<!-- Chart.js -->
+<script src="{% static 'chartjs/chart.js' %}"></script>
+
+<style>
+  .grafik{
+    width: 50%;
+  }
+</style>
+{% endblock head %}
+
+{% block body %}
+<div class="container mt-3 d3-data">
+  <h1>{{data.city}}</h1>
+  <h4>Sumber data: {{data.source|title}} & BMKG</h4>
+  <p>
+    <span>Akuisisi data: {{data.timestamp}}</span><br>
+    <span>Lokasi: {{data.latitude}} {{data.longitude}}</span> 
+  </p>
+  <p></p>
+  <div>
+    <h3>Prakiraan Cuaca</h3>
+    <table>
+      <thead>
+        <tr style="font-size: smaller;">
+          {% for item in data.weather %}
+          <td class="text-center" id="weather-{{item.index}}">{{item.index}}</td>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {% for item in data.weather %}
+          <td>
+            <div class="m-3">
+              <img src="/static/assets/images/weather/{{item.value}}.svg" class="card-img-top" alt="{{item.label}}">
+            </div>
+          </td>
+          {% endfor %}
+        </tr>
+        <tr style="font-size: small;">
+          {% for item in data.weather %}
+          <td class="text-center">{{item.label}}</td>
+          {% endfor %}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-4">
+    <h3>Statistik Prakiraan Parameter Cuaca</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr style="font-size: smaller;">
+          {% for item in data.temperature %}
+          <td class="text-center" id="temperature-{{item.index}}">{{item.index}}</td>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="12"><strong>Suhu Udara</strong></td></tr>
+        <tr style="font-size: xx-large;">
+          {% for item in data.temperature %}
+          <td class="text-center">{{item.value}}<sup>o</sup>{{item.unit}}</td>
+          {% endfor %}
+        </tr>
+        <tr><td colspan="12"><strong>Kelembaban Udara</strong></td></tr>
+        <tr style="font-size: xx-large;">
+          {% for item in data.humidity %}
+          <td class="text-center">{{item.value}}{{item.unit}}</td>
+          {% endfor %}
+        </tr>
+        <tr><td colspan="12"><strong>Kecepatan Angin</strong> (km per jam)</td></tr>
+        <tr style="font-size: xx-large;">
+          {% for item in data.wind_speed %}
+          <td class="text-center">{{item.value|floatformat:2}}</td>
+          {% endfor %}
+        </tr>
+        <tr><td colspan="12"><strong>Arah Angin</strong> (derajat bearing)</td></tr>
+        <tr style="font-size: xx-large;">
+          {% for item in data.wind_direction %}
+          <td class="text-center">{{item.value}}</td>
+          {% endfor %}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="my-5">
+    <div class="row">
+      <div class="grafik col">
+        <h3>Grafik Suhu Udara</h3>
+        <canvas id="temperature-chart"></canvas>
+      </div>
+      <div class="grafik col">
+        <h3>Grafik Kelembaban Udara</h3>
+        <canvas id="humidity-chart"></canvas>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="grafik col">
+        <h3>Grafik Kecepatan Angin</h3>
+        <canvas id="windspeed-chart"></canvas>
+      </div>
+      <div class="grafik col"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Script for Chart.js -->
+<script>
+  const today = new Date('{{data.timestamp}}')
+  const months = [
+    'Jan', 'Feb', 'Mar', 
+    'Apr', 'Mei', 'Jun', 
+    'Jul', 'Ags', 'Sep', 
+    'Okt', 'Nov', 'Des'
+  ];
+
+  const humidityValue = []
+  '{% for item in data.humidity %}'
+    humidityValue.push('{{item.value}}')
+  '{% endfor %}'
+
+  const temperatureValue = []
+  '{% for item in data.temperature %}'
+    temperatureValue.push('{{item.value}}')
+  '{% endfor %}'
+
+  const windspeedValue = []
+  '{% for item in data.wind_speed %}'
+    windspeedValue.push('{{item.value}}')
+  '{% endfor %}'
+  
+  const datetimeLabels = []
+  let datetimeFormat;
+  '{% for item in data.humidity %}'
+    if(Number('{{item.datetime}}') < 24){
+      datetimeFormat = `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()} {{item.datetime}}:00 WIB`
+      datetimeLabels.push(datetimeFormat)
+    }
+    else if(Number('{{item.datetime}}') < 48){
+      let hour = '{{item.datetime}}' - 24
+      datetimeFormat = `${today.getDate() + 1} ${months[today.getMonth()]} ${today.getFullYear()} ${hour}:00 WIB`
+      datetimeLabels.push(datetimeFormat)
+    } else{
+      let hour = '{{item.datetime}}' - 48
+      datetimeFormat = `${today.getDate() + 2} ${months[today.getMonth()]} ${today.getFullYear()} ${hour}:00 WIB`
+      datetimeLabels.push(datetimeFormat)
+    }
+  '{% endfor %}'
+
+  // Set weather datetime
+  for(let i=0;i<datetimeLabels.length;i++){
+    const weatherElement = document.getElementById('weather-' + i)
+    weatherElement.innerHTML = datetimeLabels[i]
+    
+    const temperatureElement = document.getElementById('temperature-' + i)
+    temperatureElement.innerHTML = datetimeLabels[i]
+  }
+</script>
+<script src="{% static 'assets/js/cuacaDetails.js' %}"></script>
+
+{% endblock body %}

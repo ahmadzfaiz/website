@@ -1,4 +1,4 @@
-{% extends 'iklim/base.html' %}
+{% extends 'cuaca/base.html' %}
 {% load static %}
 
 {% block title %}Home | Cuaca{% endblock title %}
@@ -49,7 +49,9 @@
       <div class="card-body mt-1">
         <h5 class="card-title">{{item.name}}</h5>
         <p class="card-text">{{item.lon}} {{item.lat}}</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+        {% if item.weather != 'Tidak ada data' %}
+        <a href="{% url 'cuaca_detail' index item.index %}" class="btn btn-primary">Detail cuaca</a>
+        {% endif %}
       </div>
     </div>
     <p>{{item.test}}</p>

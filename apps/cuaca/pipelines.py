@@ -55,7 +55,6 @@ def convert_dd_to_dms(degrees, type):
 
   return dms
 
-
 def get_wilayah(url):
   response = requests.get(url)
   parse = xmltodict.parse(response.text)
@@ -132,7 +131,6 @@ def get_wilayah(url):
     'timestamp': timestamp,
     'climate': climate
   }
-
 
 def get_wilayah_detail(index1: int, index2: int):
   response = requests.get(index1)
@@ -276,10 +274,6 @@ def get_wilayah_detail(index1: int, index2: int):
         data['value'] = timerange['value'][2]['#text']
         data['unit'] = timerange['value'][2]['@unit']
         wind_speed.append(data)
-
-  # import json
-  # with open(f'{settings.MEDIA_ROOT}/temp/humidity.json', 'w') as file:
-  #   json.dump(humidity, file)
 
   return {
     'city': city,

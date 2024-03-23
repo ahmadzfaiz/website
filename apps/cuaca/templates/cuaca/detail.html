@@ -11,30 +11,44 @@
   .grafik{
     width: 50%;
   }
+
+  .timeframe-cuaca{
+    font-size: smaller;
+  }
+
+  .text-prakiraan-cuaca{
+    font-size: small;
+  }
+
+  .stats-item{
+    font-size: xx-large;
+  }
 </style>
 {% endblock head %}
 
 {% block body %}
 <div class="container mt-3 d3-data">
-  <h1>{{data.city}}</h1>
-  <h4>Sumber data: {{data.source|title}} & BMKG</h4>
-  <p>
-    <span>Akuisisi data: {{data.timestamp}}</span><br>
-    <span>Lokasi: {{data.latitude}} {{data.longitude}}</span> 
-  </p>
-  <p></p>
-  <div>
+  <div id="data-info">
+    <h1>{{data.city}}</h1>
+    <h4>Sumber data: {{data.source|title}} & BMKG</h4>
+    <p>
+      <span>Akuisisi data: {{data.timestamp}}</span><br>
+      <span>Lokasi: {{data.latitude}} {{data.longitude}}</span> 
+    </p>
+  </div>
+
+  <div id="prakiraan-cuaca">
     <h3>Prakiraan Cuaca</h3>
     <table>
       <thead>
-        <tr style="font-size: smaller;">
+        <tr class="timeframe-cuaca">
           {% for item in data.weather %}
           <td class="text-center" id="weather-{{item.index}}">{{item.index}}</td>
           {% endfor %}
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr class="icon-prakiraan-cuaca">
           {% for item in data.weather %}
           <td>
             <div class="m-3">
@@ -43,7 +57,7 @@
           </td>
           {% endfor %}
         </tr>
-        <tr style="font-size: small;">
+        <tr class="text-prakiraan-cuaca">
           {% for item in data.weather %}
           <td class="text-center">{{item.label}}</td>
           {% endfor %}
@@ -52,37 +66,37 @@
     </table>
   </div>
 
-  <div class="mt-4">
+  <div class="mt-4" id="statistik-cuaca">
     <h3>Statistik Prakiraan Parameter Cuaca</h3>
     <table class="table table-striped">
       <thead>
-        <tr style="font-size: smaller;">
+        <tr class="timeframe-cuaca">
           {% for item in data.temperature %}
-          <td class="text-center" id="temperature-{{item.index}}">{{item.index}}</td>
+          <td class="text-center" id="stats-{{item.index}}">{{item.index}}</td>
           {% endfor %}
         </tr>
       </thead>
       <tbody>
-        <tr><td colspan="12"><strong>Suhu Udara</strong></td></tr>
-        <tr style="font-size: xx-large;">
+        <tr id="title-temperature"><td colspan="12"><strong>Suhu Udara</strong></td></tr>
+        <tr class="stats-item">
           {% for item in data.temperature %}
           <td class="text-center">{{item.value}}<sup>o</sup>{{item.unit}}</td>
           {% endfor %}
         </tr>
-        <tr><td colspan="12"><strong>Kelembaban Udara</strong></td></tr>
-        <tr style="font-size: xx-large;">
+        <tr id="title-humidity"><td colspan="12"><strong>Kelembaban Udara</strong></td></tr>
+        <tr class="stats-item">
           {% for item in data.humidity %}
           <td class="text-center">{{item.value}}{{item.unit}}</td>
           {% endfor %}
         </tr>
-        <tr><td colspan="12"><strong>Kecepatan Angin</strong> (km per jam)</td></tr>
-        <tr style="font-size: xx-large;">
+        <tr id="title-wind-speed"><td colspan="12"><strong>Kecepatan Angin</strong> (km per jam)</td></tr>
+        <tr class="stats-item">
           {% for item in data.wind_speed %}
           <td class="text-center">{{item.value|floatformat:2}}</td>
           {% endfor %}
         </tr>
-        <tr><td colspan="12"><strong>Arah Angin</strong> (derajat bearing)</td></tr>
-        <tr style="font-size: xx-large;">
+        <tr id="title-wind-direction"><td colspan="12"><strong>Arah Angin</strong> (derajat bearing)</td></tr>
+        <tr class="stats-item">
           {% for item in data.wind_direction %}
           <td class="text-center">{{item.value}}</td>
           {% endfor %}
@@ -91,23 +105,23 @@
     </table>
   </div>
   
-  <div class="my-5">
+  <div class="my-5" id="grafik-cuaca">
     <div class="row">
-      <div class="grafik col">
+      <div class="grafik col" id="graph-temperature">
         <h3>Grafik Suhu Udara</h3>
         <canvas id="temperature-chart"></canvas>
       </div>
-      <div class="grafik col">
+      <div class="grafik col" id="graph-humidity">
         <h3>Grafik Kelembaban Udara</h3>
         <canvas id="humidity-chart"></canvas>
       </div>
     </div>
     <div class="row mt-4">
-      <div class="grafik col">
+      <div class="grafik col" id="graph-wind-speed">
         <h3>Grafik Kecepatan Angin</h3>
         <canvas id="windspeed-chart"></canvas>
       </div>
-      <div class="grafik col"></div>
+      <div class="grafik col" id="graph-wind-direction"></div>
     </div>
   </div>
 </div>
@@ -160,7 +174,7 @@
     const weatherElement = document.getElementById('weather-' + i)
     weatherElement.innerHTML = datetimeLabels[i]
     
-    const temperatureElement = document.getElementById('temperature-' + i)
+    const temperatureElement = document.getElementById('stats-' + i)
     temperatureElement.innerHTML = datetimeLabels[i]
   }
 </script>

@@ -21,8 +21,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.home.urls')),
-    path('', include('apps.blog.urls')),
+    path('blog/', include('apps.blog.urls')),
     path('cuaca/', include('apps.cuaca.urls')),
+    path('gempa/', include('apps.gempa.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 ] 
 

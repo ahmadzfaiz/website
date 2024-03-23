@@ -1,0 +1,46 @@
+{% load static %}
+
+<style>
+  #list-provinsi{
+    max-height: 500px;
+    overflow-y: auto;
+  }
+</style>
+
+<header class="fixed-top p-3 bg-dark text-white">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+        <img src="/static/assets/images/signature.png" alt="Signature Ahmad Zaenun Faiz" height="50px">
+      </a>
+
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="{% url 'gempa_home' %}" class="nav-link px-2 text-secondary">Home</a></li>
+        <li><a href="#" class="nav-link px-2 text-white">Gempa Terkini</a></li>
+        <li><a href="#" class="nav-link px-2 text-white">Gempa Dirasakan</a></li>
+        <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+      </ul>
+      
+      {% if request.user.is_authenticated %}
+      <div class="btn-group">
+        <div class="btn dropdown-toggle p-0" data-bs-toggle="dropdown" aria-expanded="false">
+          <img height="50px" src="{% static 'blog/img/avatar/capybara.png' %}" alt="profile_avatar">
+        </div>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><button class="dropdown-item" type="button">Profile</button></li>
+          <li><a href="{% url 'password_change' %}" class="text-decoration-none"><button class="dropdown-item" type="button">Change Password</button></a></li>
+          <hr>
+          <li><a href="{% url 'logout' %}" class="text-decoration-none"><button class="dropdown-item" type="button">Logout</button></a></li>
+        </ul>
+      </div>
+      <div>Welcome,<br> <b>{{request.user}}</b></div>
+      {% else %}
+      <div class="text-end">
+        <a href="{% url 'login' %}?next={% url 'cuaca_home' %}"><button type="button" class="btn btn-outline-light me-2">Login</button></a>
+        <a href="{% url 'register' %}"><button type="button" class="btn btn-warning">Sign-up</button></a>
+      </div>
+      {% endif %}
+      
+    </div>
+  </div>
+</header>

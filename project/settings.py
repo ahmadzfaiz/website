@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'apps.home',
     'apps.blog',
     'apps.cuaca',
+    'apps.gempa',
 ]
 
 MIDDLEWARE = [

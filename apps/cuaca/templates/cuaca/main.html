@@ -25,28 +25,32 @@
   .cuaca:hover .cuaca-info {
     display: block;
   }
+
+  .cuaca-card{
+    width: 18rem;
+  }
 </style>
 {% endblock head %}
 
 {% block body %}
 <div class="container mt-2">
   <h1 class="info">Prakiraan Cuaca di {{page.title}}</h1>
-  <p>
-    Sumber Data: {{data.source|title}} & BMKG. <br> 
+  <p id="data-description">
+    Sumber Data: BMKG & {{data.source|title}} <br> 
     Akuisisi data: {{data.timestamp}} <br>
     Waktu saat ini: {% now "Y-m-d H:i:s" %} WIB
   </p>
 
   <div class="d-flex justify-content-center flex-wrap my-4">
     {% for item in data.climate %}
-    <div class="card mx-2 my-2" style="width: 18rem;">
+    <div class="cuaca-card card mx-2 my-2">
       <div class="cuaca">
         <div class="m-4">
           <img src="/static/assets/images/weather/{{item.icon}}.svg" class="card-img-top" alt="{{item.weather}}">
           <div class="cuaca-info">{{item.weather}}</div>
         </div>
       </div>
-      <div class="card-body mt-1">
+      <div class="cuaca-desc card-body mt-1">
         <h5 class="card-title">{{item.name}}</h5>
         <p class="card-text">{{item.lon}} {{item.lat}}</p>
         {% if item.weather != 'Tidak ada data' %}
@@ -58,7 +62,7 @@
     {% endfor %}
   </div>
 
-  <div class="row mb-5">
+  <div class="row mb-5" id="paginator">
     <div class="col ms-3">
       {% if page.index != page.first %}
       <a href="{% url 'cuaca_main' page.previous %}" class="btn btn-outline-secondary">Previous</a>

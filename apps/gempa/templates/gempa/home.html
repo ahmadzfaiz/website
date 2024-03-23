@@ -1,0 +1,73 @@
+{% extends 'gempa/base.html' %}
+
+{% block title %}{% endblock title %}
+
+{% block head %}{% endblock head %}
+
+{% block body %}
+<div class="container">
+  <div class="text-center mt-5">
+    <h1 class="mt-2">Data Informasi Gempabumi - BMKG</h1>
+    <img src="https://cdn.bmkg.go.id/Web/Logo-BMKG-new.png" alt="Logo BMKG" width="200">
+    <p class="mt-2">Halaman ini menunjukkan data informasi gempabumi yang dipublikasikan oleh BMKG.</p>
+  </div>
+
+  <div id="data-content">
+    <h3>Kejadian Gempabumi terbaru</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr class="table-success">
+          <th>Informasi</th>
+          <th>Detail Informasi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Tanggal kejadian</th>
+          <td>{{data.Infogempa.gempa.Tanggal}}</td>
+        </tr>
+        <tr>
+          <th>Waktu kejadian</th>
+          <td>{{data.Infogempa.gempa.Jam}}</td>
+        </tr>
+        <tr>
+          <th>Lokasi kejadian</th>
+          <td>{{data.Infogempa.gempa.Bujur}} {{data.Infogempa.gempa.Lintang}}</td>
+        </tr>
+        <tr>
+          <th>Magnitude</th>
+          <td>{{data.Infogempa.gempa.Magnitude}}</td>
+        </tr>
+        <tr>
+          <th>Kedalaman</th>
+          <td>{{data.Infogempa.gempa.Kedalaman}}</td>
+        </tr>
+        <tr>
+          <th>Wilayah</th>
+          <td>{{data.Infogempa.gempa.Wilayah}}</td>
+        </tr>
+        <tr>
+          <th>Potensi</th>
+          <td>{{data.Infogempa.gempa.Potensi}}</td>
+        </tr>
+        <tr>
+          <th>Dirasakan di wilayah</th>
+          <td>
+            <ul>
+            {% for item in data.Infogempa.gempa.Dirasakan %}
+              <li>{{item}}</li>
+            {% endfor %}
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th>Peta lokasi</th>
+          <td>
+            <img src="https://data.bmkg.go.id/DataMKG/TEWS/{{data.Infogempa.gempa.Shakemap}}" alt="peta info gempa" width="100%">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock body %}

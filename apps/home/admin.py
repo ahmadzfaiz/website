@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
-from .models import Portfolio, Experience, Certificate, Skill, Contact, ActivityLog, WebEntry
+from .models import Portfolio, Experience, Certificate, Skill, Contact, ActivityLog, WebEntry, YoutubeVideos
 
 # Register your models here.    
 @admin.register(Portfolio)
@@ -41,3 +41,5 @@ class WebEntryModel(admin.ModelAdmin):
     'ip', 'action', 'timestamp', 'electronic', 
     'os_type', 'os_version', 'browser_type', 'browser_version', 
     'device_type', 'device_brand', 'device_model', 'username')
+  
+admin.site.register(YoutubeVideos)

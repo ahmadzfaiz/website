@@ -103,3 +103,7 @@ class WebEntry(models.Model):
   timezone = models.CharField(max_length=20, editable=False, default='None')
   isp = models.CharField(max_length=80, editable=False, default='None')
   isp_detail = models.CharField(max_length=100, editable=False, default='None')
+
+class YoutubeVideos(models.Model):
+  title = models.CharField(max_length=50)
+  url = models.URLField()

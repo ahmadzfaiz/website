@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from apps.home.models import Portfolio, Experience, Certificate, Skill, Contact
+from apps.home.models import Portfolio, Experience, Certificate, Skill, Contact, YoutubeVideos
 from apps.home.forms import contactForm
 from django.core.mail import send_mail, EmailMessage
 from django.template.loader import render_to_string
@@ -16,6 +16,7 @@ def home(request):
   cert = Certificate.objects.all
   skill = Skill.objects.all
   contact = Contact.objects.all
+  youtube = YoutubeVideos.objects.all
 
   if request.method == 'POST':
     contact = contactForm(request.POST)
@@ -45,5 +46,5 @@ def home(request):
     'certificate': cert,
     'experience': exp,
     'contact': contact,
-    'contact': contact,
+    'youtube': youtube,
   })

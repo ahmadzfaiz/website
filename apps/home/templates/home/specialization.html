@@ -1,34 +1,89 @@
+<style>
+    @media (min-width: 1200px) {
+        .youtube-video{
+            width: 80%;
+            height: 70%;
+        }
+    }
+
+    @media (min-width: 600px) and (max-width: 1200px) {
+        .youtube-video{
+            width: 80%;
+            height: 50%;
+        }
+    }
+</style>
+
 <section class="page-section" id="specialization">
   <div class="container">
-      <div class="text-center">
-          <h2 class="section-heading text-uppercase">Specialization</h2>
-          <h3 class="section-subheading text-muted">Check my specialization!</h3>
-      </div>
-      <div class="row text-center">
-          <div class="col-md-4">
-              <span class="fa-stack fa-4x">
-                  <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                  <i class="fas fa-solid fa-map-location-dot fa-stack-1x fa-inverse"></i>
-              </span>
-              <h4 class="my-3">Spatial Analysis</h4>
-              <p class="text-muted">I am a GIS proffesional with a lot of expertise. I prefer using an open source GIS framework to perform spatial analysis such as QGIS, Python, Pandas, GeoPandas etc.</p>
-          </div>
-          <div class="col-md-4">
-              <span class="fa-stack fa-4x">
-                  <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                  <i class="fas fa-solid fa-database fa-stack-1x fa-inverse"></i>
-              </span>
-              <h4 class="my-3">Data Engineering</h4>
-              <p class="text-muted">I am working with cloud computing technology such as Google Cloud and Amazon Web Service to perform data engineering. I use Apache Beam, Apache Airflow and BigQuery in my daily tasks of data engineering.</p>
-          </div>
-          <div class="col-md-4">
-              <span class="fa-stack fa-4x">
-                  <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                  <i class="fas fa-solid fa-earth-asia fa-stack-1x fa-inverse"></i>
-              </span>
-              <h4 class="my-3">WebGIS Development</h4>
-              <p class="text-muted">Django is my favourite framework to build WebGIS using Python. I also working with GeoServer, PostGIS and GeoNode as a full-stack WebGIS development. </p>
-          </div>
-      </div>
+    <div class="text-center">
+        <h2 class="section-heading text-uppercase">Specialization</h2>
+        <h3 class="section-subheading text-muted">Check my specialization!</h3>
+    </div>
+    <div class="row text-center">
+        <div class="col-md-4">
+            <span class="fa-stack fa-4x">
+                <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                <i class="fas fa-solid fa-map-location-dot fa-stack-1x fa-inverse"></i>
+            </span>
+            <h4 class="my-3">Spatial Analysis</h4>
+            <p class="text-muted">I am a GIS proffesional with a lot of expertise. I prefer using an open source GIS framework to perform spatial analysis such as QGIS, Python, Pandas, GeoPandas etc.</p>
+        </div>
+        <div class="col-md-4">
+            <span class="fa-stack fa-4x">
+                <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                <i class="fas fa-solid fa-database fa-stack-1x fa-inverse"></i>
+            </span>
+            <h4 class="my-3">Data Engineering</h4>
+            <p class="text-muted">I am working with cloud computing technology such as Google Cloud and Amazon Web Service to perform data engineering. I use Apache Beam, Apache Airflow and BigQuery in my daily tasks of data engineering.</p>
+        </div>
+        <div class="col-md-4">
+            <span class="fa-stack fa-4x">
+                <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                <i class="fas fa-solid fa-earth-asia fa-stack-1x fa-inverse"></i>
+            </span>
+            <h4 class="my-3">WebGIS Development</h4>
+            <p class="text-muted">Django is my favourite framework to build WebGIS using Python. I also working with GeoServer, PostGIS and GeoNode as a full-stack WebGIS development. </p>
+        </div>
+    </div>
   </div>
+
+  <!-- YouTube Video Embed -->
+  <div class="container mt-5 text-center">
+    <div id="youtube-videos" class="carousel carousel-dark slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          {% for item in youtube %}
+          <div class="carousel-item youtube-item">
+            <iframe 
+                class="youtube-video" 
+                src="{{item.url}}" 
+                title="{{item.title}}" 
+                frameborder="0" 
+                referrerpolicy="strict-origin-when-cross-origin"
+                data-bs-interval="false" 
+                allowfullscreen
+            ></iframe>
+          </div>
+          {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#youtube-videos" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#youtube-videos" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+  </div>
+
+  <script>
+    const youtubeVideos = document.getElementsByClassName('youtube-item');
+    const firstYoutubeVideo = youtubeVideos[0];
+    firstYoutubeVideo.classList.add('active');
+
+    const youtubeIndicators = document.getElementsByClassName('youtube-indicator');
+    const firstYoutubeIndicator = youtubeIndicators[0];
+    firstYoutubeIndicator.classList.add('active');
+  </script>
 </section>

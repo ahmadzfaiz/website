@@ -1,4 +1,4 @@
-import json, requests, os
+import json, requests, os, math
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.conf import settings
@@ -18,6 +18,7 @@ class PengamatanView(TemplateView):
       file = json.load(file)
 
     data_count = len(file)
+    page_count = math.ceil(data_count / 10)
 
     page_start = (page - 1) * 10
     page_end = page * 10
@@ -30,7 +31,7 @@ class PengamatanView(TemplateView):
       data = np.append(data, json.loads(response.text))
 
     params = {
-      'count': data_count,
+      'count': page_count,
       'data': data,
       'page': page
     }

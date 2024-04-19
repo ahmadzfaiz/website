@@ -1,0 +1,47 @@
+{% extends 'gempa/base.html' %}
+
+{% block title %}Gempa Terkini | Gempa{% endblock title %}
+
+{% block head %}{% endblock head %}
+
+{% block body %}
+<div class="container">
+  <div class="text-center mt-5">
+    <h1 class="mt-2">Data Informasi Gempabumi - BMKG</h1>
+    <img src="https://cdn.bmkg.go.id/Web/Logo-BMKG-new.png" alt="Logo BMKG" width="200">
+    <p class="mt-2">Halaman ini menunjukkan data informasi gempabumi yang dipublikasikan oleh BMKG.</p>
+  </div>
+
+  <div id="data-content">
+    <h3>Daftar Gempabumi terkini</h3>
+    <table class="table table-striped table-hover mb-5">
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Jam</th>
+          <th>Lintang</th>
+          <th>Bujur</th>
+          <th>Magnitude</th>
+          <th>Kedalaman</th>
+          <th>Wilayah</th>
+          <th>Potensi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in data.Infogempa.gempa %}
+        <tr>
+          <td>{{item.Tanggal}}</td>
+          <td>{{item.Jam}}</td>
+          <td>{{item.Lintang}}</td>
+          <td>{{item.Bujur}}</td>
+          <td>{{item.Magnitude}}</td>
+          <td>{{item.Kedalaman}}</td>
+          <td>{{item.Wilayah}}</td>
+          <td>{{item.Potensi}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock body %}

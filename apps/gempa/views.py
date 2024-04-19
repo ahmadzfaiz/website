@@ -16,3 +16,11 @@ class HomeView(TemplateView):
       'data': parse
     }
     return render(request, 'gempa/home.html', params)
+  
+class GempaTerkiniView(TemplateView):
+  def get(self, request, *args, **kwargs):
+    response = requests.get('https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json')
+    params = {
+      'data': json.loads(response.text)
+    }
+    return render(request, 'gempa/gempa_terkini.html', params)

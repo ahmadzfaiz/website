@@ -1,21 +1,135 @@
 {% extends 'biodiversity/base.html' %}
 {% load biodiversity_custom_tags %}
 
-{% block title %}Detail | Biodiversity{% endblock title %}
+{% block title %}Detail {{data.species}} | Biodiversity{% endblock title %}
 
 {% block head %}
 <style>
-  .logo-gbif{
-    background-color: grey;
-    @media screen and (min-width: 1200px) {
-      width: 75%;
-    }
+  #map{
+    height: 180px;
   }
 </style>
+
+<!-- Leaflet JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 {% endblock head %}
 
 {% block body %}
 <div class="container">
-  <h1>Home</h1>
+  <div class="mt-3">
+    <h1>{{data.scientificName}}</h1>
+    <p>
+      <div>Last Crawled: {{data.lastCrawled}}</div>
+      <div>Last Parsed: {{data.lastParsed}}</div>
+      <div>Last Interpreted: {{data.lastInterpreted}}</div>
+    </p>
+    <div id="map"></div>
+  </div>
+
+  <div class="table-responsive mb-5">
+    <table class="table table-striped tabel-hover">
+      <tbody>
+        <tr>
+          <th class="table-info">Jenis Pengamatan</th>
+          <td>{{data.basisOfRecord}}</td>
+        </tr>
+        <tr>
+          <th class="table-info">Status Pengamatan</th>
+          <td>{{data.occurrenceStatus}}</td>
+        </tr>
+        <tr>
+          <th class="table-info">Taksonomi</th>
+          <td>
+            <ul>
+              <li><strong>Vernacular Name:</strong> <i>{{data.vernacularName}}</i></li>
+              <li><strong>Scientific Name:</strong> <i>{{data.scientificName}}</i></li>
+              <li><strong>Accepted Scientific Name:</strong> <i>{{data.acceptedScientificName}}</i></li>
+              <li><strong>Kingdom:</strong> <i>{{data.kingdom}}</i></li>
+              <li><strong>{% if data.kingdom == 'Animalia' %}Phylum{% else %}Division{% endif %}:</strong> <i>{{data.phylum}}</i></li>
+              <li><strong>Class:</strong> <i>{{data.class}}</i></li>
+              <li><strong>Order:</strong> <i>{{data.order}}</i></li>
+              <li><strong>Family:</strong> <i>{{data.family}}</i></li>
+              <li><strong>Genus:</strong> <i>{{data.genus}}</i></li>
+              <li><strong>Species:</strong> <i>{{data.species}}</i></li>
+              <li><strong>Generic Name:</strong> <i>{{data.genericName}}</i></li>
+              <li><strong>Specific Epithet:</strong> <i>{{data.specificEpithet}}</i></li>
+              <li><strong>Taxonomic Rank:</strong> <i>{{data.taxonRank}}</i></li>
+              <li><strong>Taxonomic Status:</strong> <i>{{data.taxonomicStatus}}</i></li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th class="table-info">Foto Pengamatan</ class="table-info">
+          <td>
+            {% for image in data.media %}
+            <a href="{{image.references}}" target="_blank" title="{{image.publisher}} - {{image.creator}}">
+              <img src="{{image.identifier}}" class="media-photo" alt="{{image.publisher}} - {{image.creator}}" width="25%">
+            </a>
+            {% endfor %}
+          </td>
+        </tr>
+        <tr>
+          <th class="table-info">IUCN Kategori</th>
+          <td>
+            <a href="{{item.iucnRedListCategory|iucn_redlist_reference}}" target="_blank">
+              <img src="{{data.iucnRedListCategory|iucn_redlist_logo}}" alt="{{data.iucnRedListCategory|iucn_redlist_title}}" title="{{data.iucnRedListCategory|iucn_redlist_title}}" height="100">
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <th class="table-info">Lokasi</th>
+          <td>
+            <ul>
+              <li>Benua: {{data.continent}}</li>
+              <li>Negara: {{data.country}}</li>
+              <li>Provinsi: {{data.stateProvince}}</li>
+              <li>Lokasi: {% if data.locality == None %} {{data.verbatimLocality}} {% else  %} {{data.locality}} {% endif %}</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th class="table-info">Data Issue</th>
+          <td>
+            <ul>
+              {% for item in data.issues %}
+              <li>{{item}}</li>
+              {% endfor %}
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th class="table-info">Penerbit</th>
+          <td>
+            <a href="{{data.references}}" target="_blank" class="text-decoration-none">
+              <img src="https://flagpedia.net/data/flags/h20/{{data.publishingCountry|lower}}.webp" alt="{{data.publishingCountry}}" title="{{data.publishingCountry}}">
+              <div>Publisher: {% if data.institutionCode == None %} {{data.associatedReferences}} {% else %} {{data.institutionCode}} {% endif %}</div>
+              <div>Rights Holder: {{data.rightsHolder}}</div>
+              <div>Dataset: {{data.datasetName}}</div>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <th class="table-info">Lisensi</th>
+          <td>
+            <a href="{{data.license}}" target="_blank">
+              <img src="{{data.license|biodiversity_license_logo}}" alt="CC License" height="50" title="{{data.license|biodiversity_license_title}}">
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
+
+<script>
+  const latitude = Number('{{data.decimalLatitude}}');
+  const longitude = Number('{{data.decimalLongitude}}');
+  const map = L.map('map').setView([latitude, longitude], 12);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+  const marker = L.marker([latitude, longitude]).addTo(map);
+</script>
 {% endblock body %}

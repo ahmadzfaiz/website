@@ -4,7 +4,6 @@ from django.views.generic import TemplateView
 from django.conf import settings
 import numpy as np
 
-# Create your views here.
 class HomeView(TemplateView):
   def get(self, request, *args, **kwargs):
     params = {
@@ -44,7 +43,9 @@ class PengamatanView(TemplateView):
   
 class DetailPengamatanView(TemplateView):
   def get(self, request, page):
+    response = requests.get(f'https://api.gbif.org/v1/occurrence/{page}')
+    data = json.loads(response.text)
     params = {
-      'data': 'data'
+      'data': data
     }
-    return render(request, 'biodiversity/home.html', params)
+    return render(request, 'biodiversity/detail_pengamatan.html', params)

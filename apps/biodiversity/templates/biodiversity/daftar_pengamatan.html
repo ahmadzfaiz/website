@@ -22,7 +22,7 @@
       Data yang ditampilkan pada laman ini diakses dari <a href="https://www.gbif.org/">www.gbif.org</a> yang diunduh pada tanggal 18 April 2024.
     </p>
     <div class="logo-gbif">
-      <img class="m-3" src="https://www.gbif.org/img/full_logo_white.svg" alt="Logo GBIF">
+      <img class="m-3" src="https://www.gbif.org/img/full_logo_white.svg" alt="Logo GBIF" title="Logo GBIF">
     </div>
     <p>Data berikut ini dikelola oleh GBIF. Perhatikan jenis lisensi pada kolom paling kanan jika menggunakan data ini.</p>
   </div>
@@ -45,11 +45,7 @@
           <th>Lintang</th>
           <th>Negara Penerbit</th>
           <th>Pengamatan</th>
-          <th>Kingdom</th>
-          <th>Phylum</th>
-          <th>Order</th>
-          <th>Family</th>
-          <th>Genus</th>
+          <th>IUCN</th>
           <th>Species</th>
           <th>Lisensi</th>
         </tr>
@@ -68,20 +64,20 @@
           <td>{{item.decimalLongitude}}</td>
           <td>{{item.decimalLatitude}}</td>
           <td class="text-center">
-            <img src="https://flagpedia.net/data/flags/h20/{{item.publishingCountry|lower}}.webp" alt="{{item.publishingCountry}}">
+            <img src="https://flagpedia.net/data/flags/h20/{{item.publishingCountry|lower}}.webp" alt="{{item.publishingCountry}}" title="{{item.publishingCountry}}">
           </td>
           <td>
             <a href="{% url 'biodiversity_detail_pengamatan' item.key %}">{{item.basisOfRecord}}</a>
           </td>
-          <td>{{item.kingdom}}</td>
-          <td>{{item.phylum}}</td>
-          <td>{{item.order}}</td>
-          <td>{{item.family}}</td>
-          <td>{{item.genus}}</td>
+          <td>
+            <a href="{{item.iucnRedListCategory|iucn_redlist_reference}}" target="_blank">
+              <img src="{{item.iucnRedListCategory|iucn_redlist_logo}}" alt="{{item.iucnRedListCategory}}" title="{{item.iucnRedListCategory|iucn_redlist_title}}" height="50">
+            </a>
+          </td>
           <td>{{item.species}}</td>
           <td>
             <a href="{{item.license}}" target="_blank">
-              <img src="{{item.license|biodiversity_license_logo}}" alt="" height="20">
+              <img src="{{item.license|biodiversity_license_logo}}" alt="CC License" height="30" title="{{item.license|biodiversity_license_title}}">
             </a>
           </td>
         </tr>

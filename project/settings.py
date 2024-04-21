@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import os, platform
+import os
 from .secret import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -120,6 +120,37 @@ DATABASES = {
     }
 }
 
+# Logger
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+    'applogfile': {
+        'level':'DEBUG',
+        'class':'logging.handlers.RotatingFileHandler',
+        'filename': os.path.join(BASE_DIR, 'logs/website.log'),
+        'maxBytes': 1024*1024*15, # 15MB
+        'backupCount': 10,
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

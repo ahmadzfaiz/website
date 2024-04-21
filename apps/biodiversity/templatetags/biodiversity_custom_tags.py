@@ -96,3 +96,7 @@ def iucn_redlist_reference(value):
     return 'https://id.wikipedia.org/wiki/Kepunahan'
   else:
     return 'https://id.wikipedia.org/wiki/Tidak_dievaluasi'
+  
+@register.filter
+def percentage(value):
+  return '{0:.2%}'.format(value)

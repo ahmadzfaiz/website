@@ -1,5 +1,6 @@
 {% extends 'biodiversity/base.html' %}
 {% load biodiversity_custom_tags %}
+{% load humanize %}
 
 {% block title %}Home | Biodiversity{% endblock title %}
 
@@ -7,15 +8,197 @@
 <style>
   .logo-gbif{
     background-color: grey;
-    @media screen and (min-width: 1200px) {
-      width: 75%;
-    }
+    width: 200px;
+  }
+    
+  #map{
+    height: 500px;
+  }
+
+  .donut-img{
+    width: 50%;
+    margin-top: -60%;
+    text-align: center;
+  }
+
+  .donut::before {
+    content: "";
+    width: 70%; 
+    height: 70%;
+    border-radius: 50%;
+    background: #fff;
+    display: inline-block;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 15%;
+  }
+  
+  .donut {
+    /* CIRCLE */
+    width: 100px; height: 100px;
+    border-radius: 50%;
+
+    /* "CONVERT PIE TO DONUT" - CENTER SMALLER CIRCLE */
+    display: inline-block;
+    align-items: center;
+    justify-content: center;
   }
 </style>
+
+<!-- Leaflet JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 {% endblock head %}
 
 {% block body %}
+<script>
+  const kingdomPercentage = [];
+  const borPercentage = [];
+</script>
+
 <div class="container">
-  <h1>Home</h1>
+  <h1 class="mt-3">Peta Pengamatan Biodiversitas di Indonesia</h1>
+  <div id="map"></div>
+  
+  <div class="table-responsive">
+    <table class="table text-center">
+      <tbody>
+        <tbody>
+          <tr>
+            <td style="background-color: #5e0063;"></td>
+            <td style="background-color: #851362;"></td>
+            <td style="background-color: #a42e61;"></td>
+            <td style="background-color: #be4c60;"></td>
+            <td style="background-color: #d26b63;"></td>
+            <td style="background-color: #e28b6b;"></td>
+            <td style="background-color: #eeab79;"></td>
+            <td style="background-color: #f7cb8e;"></td>
+            <td style="background-color: #ffebaa;"></td>
+          </tr>
+          <tr>
+            <td>1-2</td>
+            <td>3-10</td>
+            <td>11-30</td>
+            <td>31-100</td>
+            <td>101-300</td>
+            <td>301-1000</td>
+            <td>1001-3000</td>
+            <td>3001-10000</td>
+            <td>>10000</td>
+          </tr>
+        </tbody>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-1">
+    <div class="logo-gbif">
+      <img class="m-1" src="https://www.gbif.org/img/full_logo_white.svg" alt="Logo GBIF" title="Logo GBIF">
+    </div>
+    <div>Data yang ditampilkan pada laman ini diakses dari <a href="https://www.gbif.org/">www.gbif.org</a>.</div>
+  </div>
+  
+  <div class="mt-3 mb-5">
+    <h3>Pengamatan berdasarkan Kingdom</h3>
+    <div class="d-flex justify-content-center flex-wrap">
+      {% for item in kingdom %}
+        <div class="card m-2" style="width: 12rem;">
+          <div class="card-body">
+            <h5 class="card-title">{{item.1.title|title}}</h5>
+            <div class="text-center">
+              <h6 class="card-subtitle mb-2 text-muted">{{item.1.count|intcomma}}</h6>
+              <div id="donut-kingdom-{{forloop.counter0}}" class="donut">
+                <img class="donut-img" id="donut-kingdom-img-{{forloop.counter0}}" alt="">
+              </div>
+              <div id="text-donut-kingdom-{{forloop.counter0}}">{{item.1.fraction|percentage}}</div>
+            </div>
+          </div>
+        </div>
+  
+        <script>
+          kingdomPercentage.push('{{item.1.fraction|percentage}}')
+        </script>
+      {% endfor %}
+    </div>
+
+    <script>
+    '{% for item in kingdom_settings %}'
+      document.getElementById('donut-kingdom-{{forloop.counter0}}').style.background = `conic-gradient(
+        {{item.color}} 0% ${kingdomPercentage['{{forloop.counter0}}']},
+        grey ${kingdomPercentage['{{forloop.counter0}}']} 100%
+      )`
+
+      document.getElementById('donut-kingdom-img-{{forloop.counter0}}').src = '{{item.icon}}'
+    '{% endfor %}'
+    </script>
+  </div>
+
+  <div class="mt-3 mb-5">
+    <h3>Pengamatan berdasarkan metode</h3>
+    <div class="d-flex justify-content-center flex-wrap">
+      {% for item in bor %}
+        <div class="card m-2" style="width: 12rem;">
+          <div class="card-body">
+            <h6 class="card-title">{{item.1.title|title}}</h6>
+            <div class="text-center">
+              <h6 class="card-subtitle mb-2 text-muted">{{item.1.count|intcomma}}</h6>
+              <div id="donut-bor-{{forloop.counter0}}" class="donut">
+                <img class="donut-img" id="donut-bor-img-{{forloop.counter0}}" alt="">
+              </div>
+              <div id="text-donut-bor-{{forloop.counter0}}">{{item.1.fraction|percentage}}</div>
+            </div>
+          </div>
+        </div>
+  
+        <script>
+          borPercentage.push('{{item.1.fraction|percentage}}')
+        </script>
+      {% endfor %}
+    </div>
+
+    <script>
+    '{% for item in bor_settings %}'
+      document.getElementById('donut-bor-{{forloop.counter0}}').style.background = `conic-gradient(
+        {{item.color}} 0% ${borPercentage['{{forloop.counter0}}']},
+        grey ${borPercentage['{{forloop.counter0}}']} 100%
+      )`
+
+      document.getElementById('donut-bor-img-{{forloop.counter0}}').src = '{{item.icon}}'
+    '{% endfor %}'
+    </script>
+  </div>
+  
+
+  
+  
 </div>
+
+<script>
+  // CHART VIEW
+
+  // MAP VIEW
+  const map = L.map('map').setView([-2, 118], 5);
+  const pixel_ratio = (parseInt(window.devicePixelRatio))*2 || 2;
+  const max_zoom = 16;
+  const tile_size = 512;
+
+  L.tileLayer('https://tile.gbif.org/3857/omt/{z}/{x}/{y}@{r}x.png?style=gbif-light'.replace('{r}', pixel_ratio), {
+    minZoom: 1,
+    maxZoom: max_zoom + 1,
+    zoomOffset: -1,
+    tileSize: tile_size,
+    attribution: '<a href="https://www.gbif.org/" target="_blank">Global Biodiversity Information Facility</a>'
+  }).addTo(map);
+
+  L.tileLayer('https://api.gbif.org/v2/map/occurrence/density/{z}/{x}/{y}@{r}x.png?style=purpleYellow.point&srs=EPSG:3857'.replace('{r}', pixel_ratio), {
+    minZoom: 1,
+    maxZoom: max_zoom + 1,
+    zoomOffset: -1,
+    tileSize: tile_size,
+  }).addTo(map);
+
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+    attribution: '<a href="https://www.arcgis.com" target="_blank">ESRI</a>, <a href="https://www.naturalearthdata.com/" target="_blank">Natural Earth</a>'
+  }).addTo(map);
+</script>
 {% endblock body %}

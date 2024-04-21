@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.postgres',
     'django.contrib.gis',
+    'django.contrib.humanize',
 
     # IMPORTED APPS
     'django_better_admin_arrayfield',

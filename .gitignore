@@ -136,3 +136,4 @@ project/secret.py
 media
 py-env/
 logs/
+static/

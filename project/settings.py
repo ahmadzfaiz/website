@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import os
+import os, platform
 from .secret import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -213,11 +213,11 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # GDAL for Testing in Windows
-if os.name == 'nt':
+if platform.system() == 'Windows':
     OSGEO4W = r"C:\OSGeo4W"
     assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
     GDAL_LIBRARY_PATH = r'C:\OSGeo4W\bin\gdal307.dll'
     os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
-elif os.name == 'posix':
+elif platform.system() == 'Darwin':
     GDAL_LIBRARY_PATH = '/opt/homebrew/opt/gdal/lib/libgdal.dylib'
     GEOS_LIBRARY_PATH = '/opt/homebrew/opt/geos/lib/libgeos_c.dylib'

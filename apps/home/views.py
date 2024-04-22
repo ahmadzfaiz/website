@@ -8,8 +8,8 @@ from .signals import log_activity
 
 # Create your views here.
 def home(request):
-  if request.method == 'GET':
-    log_activity(request)
+  # if request.method == 'GET':
+  #   log_activity(request)
 
   port = Portfolio.objects.all
   exp = Experience.objects.all

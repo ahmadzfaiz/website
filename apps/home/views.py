@@ -57,9 +57,8 @@ def pegadaian_api(request, interval):
     'tipe': 'beli'
   })
 
-  data = json.loads(req.text)
-
+  data = req.json()
   response = {
-    'data': data['data']['priceList']
+    'data': data['data']['priceList'],
   }
   return JsonResponse(response)

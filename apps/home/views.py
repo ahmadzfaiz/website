@@ -50,15 +50,3 @@ def home(request):
     'contact': contact,
     'youtube': youtube,
   })
-
-def pegadaian_api(request, interval):
-  req = requests.post('https://digital.pegadaian.co.id/get-harga', json={
-    'interval': interval,
-    'tipe': 'beli'
-  })
-
-  data = req.json()
-  response = {
-    'data': data['data']['priceList'],
-  }
-  return JsonResponse(response)

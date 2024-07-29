@@ -1,3 +1,5 @@
+import requests, json
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from apps.home.models import Portfolio, Experience, Certificate, Skill, Contact, YoutubeVideos
 from apps.home.forms import contactForm
@@ -48,3 +50,16 @@ def home(request):
     'contact': contact,
     'youtube': youtube,
   })
+
+def pegadaian_api(request, interval):
+  req = requests.post('https://digital.pegadaian.co.id/get-harga', json={
+    'interval': interval,
+    'tipe': 'beli'
+  })
+
+  data = json.loads(req.text)
+
+  response = {
+    'data': data['data']['priceList']
+  }
+  return JsonResponse(response)

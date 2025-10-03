@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     # IMPORTED APPS
     'django_better_admin_arrayfield',
     'django_user_agents',
+    'django_recaptcha',
     'ckeditor',
     'captcha',
     'crispy_forms',

@@ -6,18 +6,16 @@
       <h2 class="section-heading text-uppercase">Certificate</h2>
       <h3 class="section-subheading text-muted">Here is my competency certificate!</h3>
     </div>
-    <div class="row">
-      <div class="col-lg-4">
-        <div class="team-member">
-          {% for item in certificate %}
-          <img class="mx-auto rounded-circle" src="{{item.image.url}}" alt="{{item.image_label}}" />
-          <h4>{{item.publisher}}</h4>
-          <p class="text-muted">{{item.name}}</p>
-          <a class="btn btn-dark btn-social mx-2" href="{{item.certificate_link}}" aria-label="{{item.certificate_label}}" target="_blank"><i class="fa-solid fa-link"></i></a>
-          <a class="btn btn-dark btn-social mx-2" href="{{item.info_link}}" aria-label="{{item.info_label}}" target="_blank"><i class="fa-solid fa-question"></i></a>
-          {% endfor %}
-        </div>
+    <div class="certificate-grid" style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center;">
+      {% for item in certificate %}
+      <div class="certificate-item" style="flex: 0 0 calc(25% - 1.5rem); min-width: 250px; text-align: center;">
+        <img class="mx-auto rounded-circle" src="{{item.image.url}}" alt="{{item.image_label}}" style="width: 150px; height: 150px; object-fit: cover; margin-bottom: 1rem;" />
+        <h4>{{item.publisher}}</h4>
+        <p class="text-muted">{{item.name}}</p>
+        <a class="btn btn-dark btn-social mx-2" href="{{item.certificate_link}}" aria-label="{{item.certificate_label}}" target="_blank"><i class="fa-solid fa-link"></i></a>
+        <a class="btn btn-dark btn-social mx-2" href="{{item.info_link}}" aria-label="{{item.info_label}}" target="_blank"><i class="fa-solid fa-question"></i></a>
       </div>
+      {% endfor %}
     </div>
   </div>
 </section>

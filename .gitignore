@@ -131,7 +131,7 @@ dmypy.json
 # MacOS DS_Store
 .DS_Store
 
-media
+media/
 py-env/
 logs/
-static/
+staticfiles/

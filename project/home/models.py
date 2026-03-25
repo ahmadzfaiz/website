@@ -3,6 +3,20 @@ from django_better_admin_arrayfield.models import fields
 from django.core.validators import RegexValidator
 
 
+def _delete_old_image(instance, field_name):
+    """Delete the old image file if it changed."""
+    if not instance.pk:
+        return
+    try:
+        old = type(instance).objects.get(pk=instance.pk)
+    except type(instance).DoesNotExist:
+        return
+    old_file = getattr(old, field_name)
+    new_file = getattr(instance, field_name)
+    if old_file and old_file != new_file:
+        old_file.delete(save=False)
+
+
 class Portfolio(models.Model):
     project_name = models.CharField(max_length=100)
     client_name = models.CharField(max_length=100)
@@ -14,6 +28,10 @@ class Portfolio(models.Model):
     category = models.CharField(max_length=30)
     frameworks = fields.ArrayField(models.CharField(max_length=20), null=True, blank=True)
 
+    def save(self, **kwargs):
+        _delete_old_image(self, 'image')
+        super().save(**kwargs)
+
 
 class Experience(models.Model):
     workplace = models.CharField(max_length=50)
@@ -22,6 +40,10 @@ class Experience(models.Model):
     image = models.ImageField(upload_to='experience/', help_text="Rasio harus persegi. Contoh: 600px × 600px")
     label = models.CharField(max_length=30)
     description = models.TextField()
+
+    def save(self, **kwargs):
+        _delete_old_image(self, 'image')
+        super().save(**kwargs)
 
 
 class Certificate(models.Model):
@@ -34,12 +56,20 @@ class Certificate(models.Model):
     info_link = models.URLField()
     info_label = models.CharField(max_length=50)
 
+    def save(self, **kwargs):
+        _delete_old_image(self, 'image')
+        super().save(**kwargs)
+
 
 class Skill(models.Model):
     name = models.CharField(max_length=20)
     image = models.ImageField(upload_to='skills/')
     reference = models.URLField()
     label = models.CharField(max_length=30)
+
+    def save(self, **kwargs):
+        _delete_old_image(self, 'image')
+        super().save(**kwargs)
 
 
 class Contact(models.Model):

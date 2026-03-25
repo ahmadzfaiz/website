@@ -28,7 +28,6 @@ services:
     volumes:
       - ./media:/app/media
       - ./project/geoip:/app/project/geoip
-      - static_files:/app/staticfiles
 
   tunnel:
     image: cloudflare/cloudflared:latest
@@ -42,4 +41,3 @@ services:
 
 volumes:
   pgdata:
-  static_files:

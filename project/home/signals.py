@@ -12,22 +12,45 @@ logger = logging.getLogger(__name__)
 
 # GeoIP database directory (bind-mounted, updated externally by Prefect)
 GEOIP_DIR = os.path.join(settings.BASE_DIR, 'project/geoip')
+ASN_PATH = os.path.join(GEOIP_DIR, 'GeoLite2-ASN.mmdb')
+CITY_PATH = os.path.join(GEOIP_DIR, 'GeoLite2-City.mmdb')
 
 reader_asn = None
 reader_city = None
+_last_mtime_asn = 0
+_last_mtime_city = 0
 
 
 def _load_geoip_readers():
-    """Load or reload GeoIP readers from mmdb files."""
-    global reader_asn, reader_city
-    asn_path = os.path.join(GEOIP_DIR, 'GeoLite2-ASN.mmdb')
-    city_path = os.path.join(GEOIP_DIR, 'GeoLite2-City.mmdb')
+    """Load or reload GeoIP readers if files are new or changed."""
+    global reader_asn, reader_city, _last_mtime_asn, _last_mtime_city
+    changed = False
 
     try:
-        if os.path.exists(asn_path):
-            reader_asn = geoip2.database.Reader(asn_path)
-        if os.path.exists(city_path):
-            reader_city = geoip2.database.Reader(city_path)
+        if os.path.exists(ASN_PATH):
+            mtime = os.path.getmtime(ASN_PATH)
+            if mtime != _last_mtime_asn:
+                if reader_asn:
+                    reader_asn.close()
+                reader_asn = geoip2.database.Reader(ASN_PATH)
+                _last_mtime_asn = mtime
+                changed = True
+        else:
+            reader_asn = None
+
+        if os.path.exists(CITY_PATH):
+            mtime = os.path.getmtime(CITY_PATH)
+            if mtime != _last_mtime_city:
+                if reader_city:
+                    reader_city.close()
+                reader_city = geoip2.database.Reader(CITY_PATH)
+                _last_mtime_city = mtime
+                changed = True
+        else:
+            reader_city = None
+
+        if changed:
+            logger.info('GeoIP databases reloaded')
     except Exception as e:
         logger.warning('Failed to load GeoIP databases: %s', e)
 
@@ -54,8 +77,13 @@ def is_public_ip(ip):
 
 
 def get_geoip_data(ip):
-    """Lookup GeoIP data, returns None if unavailable."""
-    if not is_public_ip(ip) or not reader_city or not reader_asn:
+    """Lookup GeoIP data, auto-reloads if mmdb files changed on disk."""
+    if not is_public_ip(ip):
+        return None
+
+    _load_geoip_readers()
+
+    if not reader_city or not reader_asn:
         return None
     try:
         city = reader_city.city(ip)

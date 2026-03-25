@@ -122,8 +122,8 @@ Requires a local PostgreSQL instance. Configure connection via environment varia
 |---|---|---|
 | `SECRET_KEY` | Django secret key | `change-me-in-production` |
 | `DEBUG` | Debug mode | `true` |
-| `ALLOWED_HOSTS` | Allowed hosts (`\|` separated) | `localhost` |
-| `CSRF_TRUSTED_ORIGINS` | CSRF trusted origins (`\|` separated) | — |
+| `ALLOWED_HOSTS` | Allowed hosts (`,` separated) | `localhost` |
+| `CSRF_TRUSTED_ORIGINS` | CSRF trusted origins (`,` separated) | — |
 | `PG_HOST` | Database host | `127.0.0.1` |
 | `PG_PORT` | Database port | `5432` |
 | `POSTGRES_USER` | Database user | `faiz_admin` |
@@ -133,3 +133,7 @@ Requires a local PostgreSQL instance. Configure connection via environment varia
 | `EMAIL_HOST_PASSWORD` | SMTP app password | — |
 | `RECAPTCHA_PUBLIC_KEY` | ReCAPTCHA site key | — |
 | `RECAPTCHA_PRIVATE_KEY` | ReCAPTCHA secret key | — |
+
+## Acknowledgments
+
+This product includes GeoLite2 Data created by MaxMind, available from [https://www.maxmind.com](https://www.maxmind.com).

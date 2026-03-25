@@ -131,8 +131,6 @@ dmypy.json
 # MacOS DS_Store
 .DS_Store
 
-# DJANGO SECRET
-project/secret.py
 media
 py-env/
 logs/

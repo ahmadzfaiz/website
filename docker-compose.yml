@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: faiz-website-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DBNAME:-faiz_website}
+      POSTGRES_USER: ${POSTGRES_USER:-faiz_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASS:-y5tuxNqPywx6LpS6b3PS}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    container_name: faiz-website-web
+    restart: unless-stopped
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      PG_HOST: db
+      PG_PORT: 5432
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./media:/app/media
+      - ./project/geoip:/app/project/geoip
+      - static_files:/app/staticfiles
+
+volumes:
+  pgdata:
+  static_files:

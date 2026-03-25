@@ -3,8 +3,12 @@ from django.dispatch import receiver
 from django.conf import settings
 from .models import ActivityLog, WebEntry
 
+import ipaddress
+import logging
 import os
 import geoip2.database
+
+logger = logging.getLogger(__name__)
 
 # IP Geolocation Database
 url_asn = os.path.join(settings.BASE_DIR, 'project/geoip/GeoLite2-ASN.mmdb')
@@ -14,8 +18,48 @@ url_city = os.path.join(settings.BASE_DIR, 'project/geoip/GeoLite2-City.mmdb')
 reader_city = geoip2.database.Reader(url_city)
 
 
-@receiver(user_logged_in)
-def log_user_login(sender, request, user, **kwargs):
+def get_client_ip(request):
+    """Get real client IP, preferring CF-Connecting-IP from Cloudflare."""
+    return (
+        request.META.get('HTTP_CF_CONNECTING_IP')
+        or request.META.get('HTTP_X_FORWARDED_FOR', '').split(',')[0].strip()
+        or request.META.get('REMOTE_ADDR')
+    )
+
+
+def is_public_ip(ip):
+    """Check if an IP is public (not private/loopback/reserved)."""
+    try:
+        return ipaddress.ip_address(ip).is_global
+    except (ValueError, TypeError):
+        return False
+
+
+def get_geoip_data(ip):
+    """Lookup GeoIP data, returns None if IP is private or not found."""
+    if not is_public_ip(ip):
+        return None
+    try:
+        city = reader_city.city(ip)
+        asn = reader_asn.asn(ip)
+        return {
+            'country_code': city.country.iso_code or 'NONE',
+            'country': city.country.names.get('en', 'None'),
+            'region_code': city.subdivisions[0].iso_code if city.subdivisions else 'NONE',
+            'region': city.subdivisions[0].names.get('en', 'None') if city.subdivisions else 'None',
+            'city': city.city.names.get('en', 'None') if city.city.names else 'None',
+            'lat': city.location.latitude or 0.0,
+            'lon': city.location.longitude or 0.0,
+            'timezone': city.location.time_zone or 'None',
+            'isp': asn.autonomous_system_organization or 'None',
+        }
+    except Exception as e:
+        logger.warning('GeoIP lookup failed for %s: %s', ip, e)
+        return None
+
+
+def get_device_info(request):
+    """Extract device info from user agent."""
     if request.user_agent.is_mobile:
         electronic = 'Smartphone'
     elif request.user_agent.is_tablet:
@@ -23,150 +67,81 @@ def log_user_login(sender, request, user, **kwargs):
     elif request.user_agent.is_pc:
         electronic = 'PC/Laptop'
     else:
-        electronic = None
+        electronic = 'None'
 
-    device_type = request.user_agent.device.family or 'None'
-    device_brand = request.user_agent.device.brand or 'None'
-    device_model = request.user_agent.device.model or 'None'
+    return {
+        'electronic': electronic,
+        'is_touchscreen': request.user_agent.is_touch_capable,
+        'is_bot': request.user_agent.is_bot,
+        'os_type': request.user_agent.os.family,
+        'os_version': request.user_agent.os.version_string,
+        'browser_type': request.user_agent.browser.family,
+        'browser_version': request.user_agent.browser.version_string,
+        'device_type': request.user_agent.device.family or 'None',
+        'device_brand': request.user_agent.device.brand or 'None',
+        'device_model': request.user_agent.device.model or 'None',
+    }
+
+
+@receiver(user_logged_in)
+def log_user_login(sender, request, user, **kwargs):
+    ip = get_client_ip(request)
+    device = get_device_info(request)
+    geo = get_geoip_data(ip) or {}
 
     WebEntry.objects.create(
         action='User Login',
-        ip=request.META.get('REMOTE_ADDR'),
-        electronic=electronic,
-        is_touchscreen=request.user_agent.is_touch_capable,
-        is_bot=request.user_agent.is_bot,
-        os_type=request.user_agent.os.family,
-        os_version=request.user_agent.os.version_string,
-        browser_type=request.user_agent.browser.family,
-        browser_version=request.user_agent.browser.version_string,
-        device_type=device_type,
-        device_brand=device_brand,
-        device_model=device_model,
+        ip=ip,
         username=user.username,
+        **device,
+        **geo,
     )
 
 
 @receiver(user_login_failed)
 def log_user_login_failed(sender, credentials, request, **kwargs):
-    ip = request.META.get('REMOTE_ADDR')
-    response_asn = reader_asn.asn(ip)
-    response_city = reader_city.city(ip)
-
-    if request.user_agent.is_mobile:
-        electronic = 'Smartphone'
-    elif request.user_agent.is_tablet:
-        electronic = 'Tablet'
-    elif request.user_agent.is_pc:
-        electronic = 'PC/Laptop'
-    else:
-        electronic = None
-
-    device_type = request.user_agent.device.family or 'None'
-    device_brand = request.user_agent.device.brand or 'None'
-    device_model = request.user_agent.device.model or 'None'
+    ip = get_client_ip(request)
+    device = get_device_info(request)
+    geo = get_geoip_data(ip) or {}
 
     WebEntry.objects.create(
         action='User Login Failed',
         ip=ip,
-        electronic=electronic,
-        is_touchscreen=request.user_agent.is_touch_capable,
-        is_bot=request.user_agent.is_bot,
-        os_type=request.user_agent.os.family,
-        os_version=request.user_agent.os.version_string,
-        browser_type=request.user_agent.browser.family,
-        browser_version=request.user_agent.browser.version_string,
-        device_type=device_type,
-        device_brand=device_brand,
-        device_model=device_model,
-        username=credentials['username'],
-        country_code=response_city.country.iso_code,
-        country=response_city.country.names['en'],
-        region_code=response_city.subdivisions[0].iso_code,
-        region=response_city.subdivisions[0].names['en'],
-        city=response_city.city.names['en'],
-        lat=response_city.location.latitude,
-        lon=response_city.location.longitude,
-        timezone=response_city.location.time_zone,
-        isp=response_asn.autonomous_system_organization,
+        username=credentials.get('username', 'Unknown'),
+        **device,
+        **geo,
     )
 
 
 @receiver(user_logged_out)
 def log_user_logout(sender, request, user, **kwargs):
-    if not settings.DEBUG:
-        if request.user_agent.is_mobile:
-            electronic = 'Smartphone'
-        elif request.user_agent.is_tablet:
-            electronic = 'Tablet'
-        elif request.user_agent.is_pc:
-            electronic = 'PC/Laptop'
-        else:
-            electronic = None
+    ip = get_client_ip(request)
+    device = get_device_info(request)
 
-        device_type = request.user_agent.device.family or 'None'
-        device_brand = request.user_agent.device.brand or 'None'
-        device_model = request.user_agent.device.model or 'None'
-
-        WebEntry.objects.create(
-            action='User Logout',
-            ip=request.META.get('REMOTE_ADDR'),
-            electronic=electronic,
-            is_touchscreen=request.user_agent.is_touch_capable,
-            is_bot=request.user_agent.is_bot,
-            os_type=request.user_agent.os.family,
-            os_version=request.user_agent.os.version_string,
-            browser_type=request.user_agent.browser.family,
-            browser_version=request.user_agent.browser.version_string,
-            device_type=device_type,
-            device_brand=device_brand,
-            device_model=device_model,
-            username=user.username,
-        )
+    WebEntry.objects.create(
+        action='User Logout',
+        ip=ip,
+        username=user.username,
+        **device,
+    )
 
 
 def log_activity(request):
-    ip = request.META.get('REMOTE_ADDR')
-    if not settings.DEBUG and ip != '127.0.0.1':
-        response_asn = reader_asn.asn(ip)
-        response_city = reader_city.city(ip)
+    ip = get_client_ip(request)
+    if not is_public_ip(ip):
+        return None
 
-        if request.user_agent.is_mobile:
-            electronic = 'Smartphone'
-        elif request.user_agent.is_tablet:
-            electronic = 'Tablet'
-        elif request.user_agent.is_pc:
-            electronic = 'PC/Laptop'
-        else:
-            electronic = None
+    device = get_device_info(request)
+    geo = get_geoip_data(ip)
+    if not geo:
+        return None
 
-        device_type = request.user_agent.device.family or 'None'
-        device_brand = request.user_agent.device.brand or 'None'
-        device_model = request.user_agent.device.model or 'None'
+    username = request.user.username if request.user.is_authenticated else 'User not login'
 
-        username = request.user.username if request.user.is_authenticated else 'User not login'
-
-        activity = ActivityLog.objects.create(
-            url_access=request.build_absolute_uri(),
-            ip=ip,
-            electronic=electronic,
-            is_touchscreen=request.user_agent.is_touch_capable,
-            is_bot=request.user_agent.is_bot,
-            os_type=request.user_agent.os.family,
-            os_version=request.user_agent.os.version_string,
-            browser_type=request.user_agent.browser.family,
-            browser_version=request.user_agent.browser.version_string,
-            device_type=device_type,
-            device_brand=device_brand,
-            device_model=device_model,
-            username=username,
-            country_code=response_city.country.iso_code,
-            country=response_city.country.names['en'],
-            region_code=response_city.subdivisions[0].iso_code,
-            region=response_city.subdivisions[0].names['en'],
-            city=response_city.city.names['en'],
-            lat=response_city.location.latitude,
-            lon=response_city.location.longitude,
-            timezone=response_city.location.time_zone,
-            isp=response_asn.autonomous_system_organization,
-        )
-        return activity
+    return ActivityLog.objects.create(
+        url_access=request.build_absolute_uri(),
+        ip=ip,
+        username=username,
+        **device,
+        **geo,
+    )

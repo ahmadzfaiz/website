@@ -1,0 +1,14 @@
+py-env/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.gitignore
+logs/
+*.log
+.DS_Store
+.env
+README.md
+.claude/

@@ -1,0 +1,34 @@
+{% load static %}
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>{% block title %}{% endblock title %} | Ahmad Zaenun Faiz</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'assets/images/hippo-solid.svg' %}">
+
+  <!-- Font Awesome 6.1.0 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/js/all.min.js" crossorigin="anonymous"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
+
+  <!-- Core theme CSS (includes Bootstrap) -->
+  <link href="{% static 'assets/css/styles.css' %}" rel="stylesheet" />
+
+  {% block head %}{% endblock head %}
+</head>
+<body id="page-top">
+  <!-- jQuery 3.7.1 -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+
+  {% block body %}{% endblock body %}
+
+  <!-- Bootstrap 5.2.3 bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <!-- Theme JS -->
+  <script src="{% static 'assets/js/scripts.js' %}"></script>
+</body>
+</html>

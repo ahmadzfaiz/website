@@ -10,12 +10,30 @@ import geoip2.database
 
 logger = logging.getLogger(__name__)
 
-# IP Geolocation Database
-url_asn = os.path.join(settings.BASE_DIR, 'project/geoip/GeoLite2-ASN.mmdb')
-reader_asn = geoip2.database.Reader(url_asn)
+# GeoIP database directory (bind-mounted, updated externally by Prefect)
+GEOIP_DIR = os.path.join(settings.BASE_DIR, 'project/geoip')
 
-url_city = os.path.join(settings.BASE_DIR, 'project/geoip/GeoLite2-City.mmdb')
-reader_city = geoip2.database.Reader(url_city)
+reader_asn = None
+reader_city = None
+
+
+def _load_geoip_readers():
+    """Load or reload GeoIP readers from mmdb files."""
+    global reader_asn, reader_city
+    asn_path = os.path.join(GEOIP_DIR, 'GeoLite2-ASN.mmdb')
+    city_path = os.path.join(GEOIP_DIR, 'GeoLite2-City.mmdb')
+
+    try:
+        if os.path.exists(asn_path):
+            reader_asn = geoip2.database.Reader(asn_path)
+        if os.path.exists(city_path):
+            reader_city = geoip2.database.Reader(city_path)
+    except Exception as e:
+        logger.warning('Failed to load GeoIP databases: %s', e)
+
+
+# Load on startup if files exist
+_load_geoip_readers()
 
 
 def get_client_ip(request):
@@ -36,8 +54,8 @@ def is_public_ip(ip):
 
 
 def get_geoip_data(ip):
-    """Lookup GeoIP data, returns None if IP is private or not found."""
-    if not is_public_ip(ip):
+    """Lookup GeoIP data, returns None if unavailable."""
+    if not is_public_ip(ip) or not reader_city or not reader_asn:
         return None
     try:
         city = reader_city.city(ip)
@@ -132,9 +150,7 @@ def log_activity(request):
         return None
 
     device = get_device_info(request)
-    geo = get_geoip_data(ip)
-    if not geo:
-        return None
+    geo = get_geoip_data(ip) or {}
 
     username = request.user.username if request.user.is_authenticated else 'User not login'
 

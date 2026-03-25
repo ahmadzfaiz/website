@@ -7,6 +7,9 @@ from .signals import log_activity
 
 
 def home(request):
+    if request.method == 'GET':
+        log_activity(request)
+
     port = Portfolio.objects.all
     exp = Experience.objects.all
     cert = Certificate.objects.all

@@ -23,12 +23,22 @@ services:
     environment:
       PG_HOST: db
       PG_PORT: 5432
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     volumes:
       - ./media:/app/media
       - ./project/geoip:/app/project/geoip
       - static_files:/app/staticfiles
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: faiz-website-tunnel
+    restart: unless-stopped
+    depends_on:
+      - web
+    command: tunnel run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN}
 
 volumes:
   pgdata:

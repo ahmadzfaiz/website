@@ -17,9 +17,9 @@ def env_int(key, default='0'):
     return int(value) if value.isdigit() else 0
 
 
-def env_list(key, default='', separator='|'):
+def env_list(key, default='', separator=','):
     value = env(key, default)
-    return [v for v in value.split(separator) if v] if value else []
+    return [v.strip() for v in value.split(separator) if v.strip()] if value else []
 
 
 # Core

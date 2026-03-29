@@ -4,9 +4,9 @@ services:
     container_name: faiz-website-db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DBNAME:-faiz_website}
-      POSTGRES_USER: ${POSTGRES_USER:-faiz_admin}
-      POSTGRES_PASSWORD: ${POSTGRES_PASS:-y5tuxNqPywx6LpS6b3PS}
+      POSTGRES_DB: ${POSTGRES_DBNAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASS}
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:

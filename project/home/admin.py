@@ -31,8 +31,9 @@ class ContactModel(admin.ModelAdmin):
 @admin.register(ActivityLog)
 class ActivityLogModel(admin.ModelAdmin):
     search_fields = ('username',)
-    list_display = ('id', 'url_access', 'ip', 'country', 'electronic', 'browser_type', 'timestamp', 'username')
+    list_display = ('id', 'url_access', 'ip', 'country', 'electronic', 'browser_type', 'is_bot', 'bot_type', 'timestamp', 'username')
     list_filter = (
+        'is_bot', 'bot_type',
         'ip', 'url_access', 'timestamp', 'electronic',
         'os_type', 'os_version', 'browser_type', 'browser_version',
         'device_type', 'device_brand', 'device_model', 'username',
@@ -42,8 +43,9 @@ class ActivityLogModel(admin.ModelAdmin):
 @admin.register(WebEntry)
 class WebEntryModel(admin.ModelAdmin):
     search_fields = ('username',)
-    list_display = ('id', 'ip', 'country', 'electronic', 'browser_type', 'action', 'timestamp', 'username')
+    list_display = ('id', 'ip', 'country', 'electronic', 'browser_type', 'is_bot', 'bot_type', 'action', 'timestamp', 'username')
     list_filter = (
+        'is_bot', 'bot_type',
         'ip', 'action', 'timestamp', 'electronic',
         'os_type', 'os_version', 'browser_type', 'browser_version',
         'device_type', 'device_brand', 'device_model', 'username',

@@ -6,6 +6,7 @@ from .models import ActivityLog, WebEntry
 import ipaddress
 import logging
 import os
+import re
 import geoip2.database
 
 logger = logging.getLogger(__name__)
@@ -104,6 +105,73 @@ def get_geoip_data(ip):
         return None
 
 
+BOT_PATTERNS = [
+    ('AI', re.compile(
+        r'gptbot|chatgpt-user|oai-searchbot|claudebot|anthropic|cohere-ai'
+        r'|perplexity|ccbot|commoncrawl|bytespider|petalbot|meta-externalagent'
+        r'|amazonbot|diffbot|youbot|ai2bot|friendlycrawler|imagesiftbot|img2dataset',
+        re.IGNORECASE,
+    )),
+    ('SEO', re.compile(
+        r'semrush|ahrefs|mj12bot|dotbot|rogerbot|blex|dataforseo|zoominfobot'
+        r'|screaming.frog|serpstat|majestic|linkdex|megaindex',
+        re.IGNORECASE,
+    )),
+    ('Search Engine', re.compile(
+        r'googlebot|google-inspectiontool|google-extended|bingbot|slurp|duckduckbot'
+        r'|yandex|baidu|sogou|applebot|naver|qwantify|ecosia',
+        re.IGNORECASE,
+    )),
+    ('Monitoring', re.compile(
+        r'lighthouse|pagespeed|gtmetrix|pingdom|uptimerobot|statuscake|site24x7'
+        r'|monitoring|checker|newrelic|datadog|statuspage|prtg',
+        re.IGNORECASE,
+    )),
+    ('Scraper', re.compile(
+        r'scrapy|mechanize|headless|phantom|selenium|puppeteer|playwright|prerender'
+        r'|wget|curl|httpx|python-requests|python-urllib|java/|libwww|lwp-'
+        r'|go-http|node-fetch|undici|axios|aiohttp|http\.rb|ruby|colly',
+        re.IGNORECASE,
+    )),
+    ('Archiver', re.compile(
+        r'ia_archiver|archive\.org|wayback|heritrix|webrecorder',
+        re.IGNORECASE,
+    )),
+    ('Feed', re.compile(
+        r'feed|rss|atom|feedly|newsblur|inoreader|feedbin',
+        re.IGNORECASE,
+    )),
+    ('Social', re.compile(
+        r'facebookexternalhit|facebot|twitterbot|linkedinbot|whatsapp|telegrambot'
+        r'|discordbot|slackbot|pinterestbot|redditbot',
+        re.IGNORECASE,
+    )),
+    ('Validator', re.compile(
+        r'validator|w3c|probe|scan|dispatch',
+        re.IGNORECASE,
+    )),
+]
+
+GENERIC_BOT_PATTERN = re.compile(r'bot|crawl|spider|scrape|fetcher', re.IGNORECASE)
+
+
+def _detect_bot(request):
+    """Detect bots and classify by type. Returns (is_bot, bot_type)."""
+    ua_string = request.META.get('HTTP_USER_AGENT', '')
+
+    if not ua_string or len(ua_string) < 10:
+        return True, 'Unknown'
+
+    for bot_type, pattern in BOT_PATTERNS:
+        if pattern.search(ua_string):
+            return True, bot_type
+
+    if request.user_agent.is_bot or GENERIC_BOT_PATTERN.search(ua_string):
+        return True, 'Other'
+
+    return False, ''
+
+
 def get_device_info(request):
     """Extract device info from user agent."""
     if request.user_agent.is_mobile:
@@ -115,10 +183,13 @@ def get_device_info(request):
     else:
         electronic = 'None'
 
+    is_bot, bot_type = _detect_bot(request)
+
     return {
         'electronic': electronic,
         'is_touchscreen': request.user_agent.is_touch_capable,
-        'is_bot': request.user_agent.is_bot,
+        'is_bot': is_bot,
+        'bot_type': bot_type,
         'os_type': request.user_agent.os.family,
         'os_version': request.user_agent.os.version_string,
         'browser_type': request.user_agent.browser.family,
